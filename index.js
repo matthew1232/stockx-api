@@ -1,3 +1,3 @@
 import { StockX } from './src';
 
-export default Stockx;
+export default StockX;

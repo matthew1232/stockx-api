@@ -373,6 +373,6 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
 
 ## Acknowledgements
 
-* **matthew#1232** - *Initial work* - [matthew1232](https://github.com/matthew1232)
+* **matthew#1232** - *Initial StockX API* - [matthew1232](https://github.com/matthew1232)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.

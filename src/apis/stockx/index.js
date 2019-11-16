@@ -35,6 +35,7 @@ export default class StockX {
                 'sec-fetch-mode': 'cors',
                 'accept-language': 'en-US,en;q=0.9',
                 'x-requested-with': 'XMLHttpRequest',
+                'upgrade-insecure-requests': 1,
                 appos: 'web',
                 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
                 accept: '*/*',

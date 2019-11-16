@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "2gua.rainbow-brackets",
+    "christian-kohler.path-intellisense",
+    "christian-kohler.npm-intellisense",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig"
+  ]
+}

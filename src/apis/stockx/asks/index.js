@@ -33,7 +33,6 @@ export default class AsksApi extends Api {
             });
 
             const { status } = res;
-
             if (!status || (status && status !== 200)) {
                 const err = new Error('Invalid response code!');
                 err.status = status || 404;
@@ -78,9 +77,6 @@ export default class AsksApi extends Api {
             });
 
             const { status } = res;
-
-            const { status } = res;
-
             if (!status || (status && status !== 200)) {
                 const err = new Error('Invalid response code!');
                 err.status = status || 404;

@@ -90,7 +90,7 @@ For example:
 import { StockX } from 'stockx-api';
 
 const stockXController = new StockX({
-    proxy: 'http://127.0.0.1:80',
+    proxy: '127.0.0.1:80:user:pass',
     currency: 'USD' // GBP, EUR, USD
 });
 ```

@@ -1,3 +1,3 @@
-const stockXAPI = require('./src/classes/stockx');
+import { StockX } from './src';
 
-module.exports = stockXAPI;
+// todo.. API Controller!

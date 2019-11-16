@@ -1,0 +1,28 @@
+{
+  "name": "stockx-api",
+  "version": "1.0.3",
+  "description": "communicate with the unofficial StockX API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matthew Mulfinger",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matthew1232/stockx-api.git"
+  },
+  "keywords": [
+    "stockx",
+    "api",
+    "promise",
+    "bots",
+    "request"
+  ],
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "moment": "^2.24.0",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}

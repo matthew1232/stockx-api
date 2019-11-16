@@ -1,3 +1,4 @@
 import { StockX } from './src';
 
-// todo.. API Controller!
+export default Stockx;
+// todo.. API Controllers when/if you decide to implement GOAT, etc..

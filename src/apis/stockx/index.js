@@ -8,7 +8,7 @@ import BidsApi from './bids';
 import UserApi from './user';
 
 // Utils
-import { format, currencies } from '../utils';
+import { format, currencies } from '../../utils';
 
 export default class StockX {
     /**

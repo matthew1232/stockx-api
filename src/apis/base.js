@@ -1,5 +1,5 @@
 import axios from 'axios';
-import axiosCookieJarSupport from 'axiosCookieJarSupport';
+import axiosCookieJarSupport from 'axios-cookiejar-support';
 
 export default class Api {
     constructor({ currency, jar, baseURL, proxy }) {

@@ -2,10 +2,10 @@
   "name": "stockx-api",
   "version": "1.0.0",
   "description": "Unofficial StockX API",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "babel --no-comments -d dist src/",
-    "start": "node index.js",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matthew Mulfinger",
@@ -43,13 +43,13 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-prettier": "^3.0.0",
-    "prettier": "^1.16.4",
     "nodemon": "^1.18.10",
+    "prettier": "^1.16.4",
     "yarn": "^1.12.3"
   },
   "dependencies": {
     "axios": "0.19.0",
-    "axios-cookiejar-support": "0.5.1",
+    "axios-cookiejar-support": "^0.5.1",
     "cheerio": "^1.0.0-rc.3",
     "moment": "^2.24.0"
   }

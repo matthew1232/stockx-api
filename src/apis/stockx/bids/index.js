@@ -2,9 +2,9 @@ import Api from '../../base';
 
 export default class BidsApi extends Api {
     // TODO!
-    async getBids(options = {}) {}
+    async list(options = {}) {}
 
-    async updateBid(options = {}) {
+    async update(options = {}) {
         const { amount, variantID, chainId } = options;
         const expiresAt = moment().add(30, 'days').utc().format();
 
@@ -16,15 +16,14 @@ export default class BidsApi extends Api {
                 throw new Error('Please login first!');
             }
 
-            const res = await this._axios({
+            const res = await this._fetch('/portfolio?a=bid', {
                 method: 'POST',
-                url: 'https://stockx.com/api/portfolio?a=bid',
                 headers: {
                     host: 'stockx.com',
                     origin: 'https://stockx.com',
                     authorization: `Bearer ${this.bearer}`,
                 },
-                data: {
+                body: {
                     PortfolioItem: {
                         localAmount: amount,
                         skuUuid: variantID,
@@ -46,12 +45,14 @@ export default class BidsApi extends Api {
 
             return { id };
         } catch (error) {
-
+            const err = new Error(`Unable to update bid: ${error.message}`);
+            err.status = error.status || 404;
+            throw err;
         }
 
     }
 
-    async placeBid(options = {}) {
+    async place(options = {}) {
         const { amount, variantID } = options;
         const expiresAt = moment().add(30, 'days').utc().format();
 
@@ -64,15 +65,14 @@ export default class BidsApi extends Api {
                 throw new Error('Please login first!');
             }
 
-            const res = await this._axios({
+            const res = await this._fetch('/portfolio?a=bid', {
                 method: 'POST',
-                url: 'https://stockx.com/api/portfolio?a=bid',
                 headers: {
                     host: 'stockx.com',
                     origin: 'https://stockx.com',
                     authorization: `Bearer ${this.bearer}`,
                 },
-                data: {
+                body: {
                     PortfolioItem: {
                         localAmount: amount,
                         skuUuid: variantID,
@@ -83,7 +83,6 @@ export default class BidsApi extends Api {
             });
 
             const { status } = res;
-
             if (!status || (status && status !== 200)) {
                 const err = new Error('Invalid response code!');
                 err.status = status || 404;
@@ -94,12 +93,12 @@ export default class BidsApi extends Api {
 
             return { id };
         } catch (error) {
-            const err = new Error('Unable to place bid!');
+            const err = new Error(`Unable to place bid: ${error.message}`);
             err.status = error.status || 404;
             throw err;
         }
     }
 
     // TODO!
-    async removeBid(options = {}) {}
+    async remove(options = {}) {}
 }

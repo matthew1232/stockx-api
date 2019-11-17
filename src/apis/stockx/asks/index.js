@@ -13,15 +13,14 @@ export default class AsksApi extends Api {
                 throw new Error('Invalid amount and/or variant id!');
             }
 
-            const res = await this._axios({
+            const res = await this._fetch('/portfolio?a=ask', {
                 method: 'POST',
-                url: 'https://stockx.com/api/portfolio?a=ask',
                 headers: {
                     host: 'stockx.com',
                     origin: 'https://stockx.com',
                     authorization: `Bearer ${this.bearer}`,
                 },
-                data: {
+                body: {
                     PortfolioItem: {
                         localAmount: amount,
                         skuUuid: variantID,
@@ -58,15 +57,14 @@ export default class AsksApi extends Api {
                 throw new Error('Invalid amount and/or variant id!');
             }
 
-            const res = await this._axios({
+            const res = await this._fetch('/portfolio?a=ask', {
                 method: 'POST',
-                url: 'https://stockx.com/api/portfolio?a=ask',
                 headers: {
                     host: 'stockx.com',
                     origin: 'https://stockx.com',
                     authorization: `Bearer ${this.bearer}`,
                 },
-                data: {
+                body: {
                     PortfolioItem: {
                         localAmount: amount,
                         skuUuid: variantID,
@@ -87,7 +85,7 @@ export default class AsksApi extends Api {
 
             return { id };
         } catch (error) {
-            const err = new Error('Unable to place ask!');
+            const err = new Error(`Unable to place ask: ${error.message}!`);
             err.status = error.status || 404;
             throw err;
         }

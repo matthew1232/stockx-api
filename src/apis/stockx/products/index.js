@@ -13,8 +13,7 @@ export default class ProductsApi extends Api {
         }
 
         try {
-            const res = await this._axios({
-                method: 'GET',
+            const res = await this._fetch({
                 url,
                 headers: {
                     'sec-fetch-mode': 'cors',
@@ -56,8 +55,7 @@ export default class ProductsApi extends Api {
             const { pathname } = new URL(product, 'https://stockx.com');
             let url = `/products${pathname}?includes=market&currency=${this.currency}`;
 
-            const res = await this._axios({
-                method: 'GET',
+            const res = await this._fetch({
                 url,
                 headers: {
                     'sec-fetch-mode': 'cors',

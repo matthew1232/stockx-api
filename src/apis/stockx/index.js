@@ -28,7 +28,7 @@ export default class StockX {
         this._context = {
             currency: this.currency,
             jar: this._jar,
-            baseURL: 'https://stockx.com/api',
+            // baseURL: 'https://stockx.com/api',
             headers: {
                 origin: 'https://stockx.com',
                 host: 'stockx.com',

@@ -19,17 +19,37 @@ export default class UserApi extends Api {
         throw new Error('Username and/or password not provided!');
       }
 
-      const { state, client_id } = await getState(this._fetch, this.proxy);
-      // console.log(state, client_id);
-      console.log('cookies after first step: ');
-      await getCookie(this.jar, 'testetstestes');
-      const { wa, wresult, wctx } = await submitCredentials(this._fetch, this.proxy, { state, client_id, username, password });
-      // console.log(wa, wresult, wctx);
-      console.log('cookies after second step: ');
-      await getCookie(this.jar, 'testetstestes');
-      const isLoggedIn = await checkStatus(this._fetch, this.proxy, { wa, wresult, wctx });
-      console.log('cookies after final step: ');
-      await getCookie(this.jar, 'testetstestes');
+      const { state, client_id } = await getState({
+        fetch: this._fetch,
+        jar: this._jar,
+        proxy: this.proxy
+      });
+      console.log(state, client_id);
+    //   console.log('cookies after first step: ');
+    //   await getCookie(this._jar, 'testetstestes');
+      const { wa, wresult, wctx } = await submitCredentials({
+        fetch: this._fetch,
+        jar: this._jar,
+        proxy: this.proxy,
+        state,
+        client_id,
+        username,
+        password,
+      });
+      console.log(wa, wresult, wctx);
+    //   console.log('cookies after second step: ');
+    //   await getCookie(this._jar, 'testetstestes');
+      const isLoggedIn = await checkStatus({
+        fetch: this._fetch,
+        jar: this._jar,
+        proxy: this.proxy, 
+        wa,
+        wresult,
+        wctx
+      });
+      console.log(isLoggedIn);
+    //   console.log('cookies after final step: ');
+    //   await getCookie(this.jar, 'testetstestes');
 
       if (isLoggedIn) {
         this.isLoggedIn = true;

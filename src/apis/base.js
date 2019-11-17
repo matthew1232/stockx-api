@@ -4,6 +4,8 @@ import defaults from 'fetch-defaults';
 export default class Api {
   constructor({ currency, jar, baseURL, headers, proxy, name }) {
 
+    // private members
+    this._jar = jar;
     const _fetch = require('fetch-cookie/node-fetch')(fetch, jar);
     this._fetch = defaults(_fetch, baseURL, {
       timeout: 10000, // can be overridden as necessary
@@ -14,8 +16,8 @@ export default class Api {
     // TEMPORARY PATCH TO ALLOW ALL PROXY TRAFFIC!!!
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+    // public members
     this.currency = currency;
-    this.jar = jar;
     this.headers = headers;
     this.proxy = proxy;
     this.name = name;

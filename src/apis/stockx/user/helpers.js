@@ -1,11 +1,10 @@
 import cheerio from 'cheerio';
 
-export const getState = async (fetch, proxy) => {
+export const getState = async ({ fetch }) => {
   try {
     const res = await fetch('https://stockx.com/login', {
       redirect: 'follow',
       follow: 5,
-      agent: proxy,
       headers: {
         host: 'stockx.com',
         'upgrade-insecure-requests': '1',
@@ -40,10 +39,9 @@ export const getState = async (fetch, proxy) => {
   }
 };
 
-export const submitCredentials = async (fetch, proxy, { state, client_id, username, password }) => {
+export const submitCredentials = async ({ fetch, state, client_id, username, password }) => {
   try {
     const res = await fetch('https://accounts.stockx.com/usernamepassword/login', {
-      agent: proxy,
       method: 'POST',
       headers: {
         host: 'accounts.stockx.com',
@@ -93,11 +91,10 @@ export const submitCredentials = async (fetch, proxy, { state, client_id, userna
   }
 }
 
-export const checkStatus = async (fetch, proxy, { wa, wresult, wctx }) => {
+export const checkStatus = async ({ fetch, wa, wresult, wctx }) => {
   try {
     const res = await fetch(`https://accounts.stockx.com/login/callback`, {
       method: 'POST',
-      agent: proxy,
       headers: {
         origin: 'https://accounts.stockx.com',
         host: 'accounts.stockx.com',
@@ -111,7 +108,6 @@ export const checkStatus = async (fetch, proxy, { wa, wresult, wctx }) => {
     });
 
     const { status } = res;
-    console.log(await res.text());
     console.log(status);
     if (!status || (status && status !== 200)) {
       const err = new Error('Invalid response code!');

@@ -2,7 +2,9 @@ require('dotenv').config();
 
 const { StockX } = require('../dist');
 
-const { password } = process.env; // .env
+const { username, password } = process.env; // .env
+
+console.log(username, password);
 
 const stockXController = new StockX();
 // if you're using charlesproxy, make sure it's launched and use the below proxy!
@@ -18,7 +20,7 @@ const stockXController = new StockX();
 // });
 
 // login to account
-stockXController.user.login({ username: 'test@test.com', password }).then(res => {
+stockXController.user.login({ username: 'matthew.wallt@gmail.com', password }).then(res => {
 
 }).catch(console.error);
 

@@ -1,18 +1,18 @@
 export default (list, sorter, limit) => {
-    if (!list) {
-      return [];
-    }
+  if (!list) {
+    return [];
+  }
 
-    let sorted = list;
-    if (sorter) {
-      sorted = sortBy(list, sorter);
-    }
-  
-    const _limit = limit || 0;
-    if (_limit === 0) {
-      return sorted;
-    }
+  let sorted = list;
+  if (sorter) {
+    sorted = sortBy(list, sorter);
+  }
 
-    // slice, then reverse elements to get the proper order
-    return sorted.slice(0, _limit).reverse();
+  const _limit = limit || 0;
+  if (_limit === 0) {
+    return sorted;
+  }
+
+  // slice, then reverse elements to get the proper order
+  return sorted.slice(0, _limit).reverse();
 };

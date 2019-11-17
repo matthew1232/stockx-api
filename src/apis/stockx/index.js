@@ -11,50 +11,48 @@ import UserApi from './user';
 import { format, currencies } from '../../utils';
 
 export default class StockX {
-    /**
-     *
-     * @param {Object} options
-     * @param options.proxy - The proxy to use for future requests
-     * @param options.currency - The currency used when making requests
-     */
-    constructor(options = {}){
-        const { proxy = null, currency = currencies.USD } = options;
+  /**
+   *
+   * @param {Object} options
+   * @param options.proxy - The proxy to use for future requests
+   * @param options.currency - The currency used when making requests
+   */
+  constructor(options = {}){
+    const { proxy = null, currency = currencies.USD } = options;
 
-        //Configure options
-        this.currency = currency;
-        console.log(proxy);
-        this.proxy = proxy ? format(proxy) : null;
-        console.log(this.proxy);
+    //Configurable options
+    this.currency = currency;
+    this.proxy = proxy ? format(proxy) : null;
 
-        this._jar = new CookieJar();
-        this._context = {
-            currency: this.currency,
-            jar: this._jar,
-            baseURL: 'https://stockx.com/api',
-            headers: {
-                origin: 'https://stockx.com',
-                host: 'stockx.com',
-                'sec-fetch-mode': 'cors',
-                'accept-language': 'en-US,en;q=0.9',
-                'x-requested-with': 'XMLHttpRequest',
-                'upgrade-insecure-requests': 1,
-                appos: 'web',
-                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-                accept: '*/*',
-                authority: 'stockx.com',
-                'sec-fetch-site': 'same-origin',
-                appversion: '0.1',
-                'content-type': 'application/json',
-            },
-            proxy: this.proxy,
-        };
-
-        // sub-module constructors
-        this.products = new ProductsApi(this._context);
-        this.asks = new AsksApi(this._context);
-        this.bids = new BidsApi(this._context);
-        this.user = new UserApi(this._context);
+    this._jar = new CookieJar();
+    this._context = {
+      currency: this.currency,
+      jar: this._jar,
+      baseURL: 'https://stockx.com/api',
+      headers: {
+        origin: 'https://stockx.com',
+        host: 'stockx.com',
+        'sec-fetch-mode': 'cors',
+        'accept-language': 'en-US,en;q=0.9',
+        'x-requested-with': 'XMLHttpRequest',
+        'upgrade-insecure-requests': 1,
+        appos: 'web',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+        accept: '*/*',
+        authority: 'stockx.com',
+        'sec-fetch-site': 'same-origin',
+        appversion: '0.1',
+        'content-type': 'application/json',
+      },
+      proxy: this.proxy,
     };
+
+    // sub-module constructors
+    this.products = new ProductsApi(this._context);
+    this.asks = new AsksApi(this._context);
+    this.bids = new BidsApi(this._context);
+    this.user = new UserApi(this._context);
+  };
 
     // /**
     //  *

@@ -13,6 +13,9 @@ const stockXController = new StockX();
 
 // login to account
 stockXController.user.login({
-    username: 'matthew.wallt@gmail.com',
-    password: 'mattwall7'
-}).then(console.log).catch(console.error);
+    username: 'test',
+    password: 'test'
+}).then(res => {
+
+}).catch(console.error);
+

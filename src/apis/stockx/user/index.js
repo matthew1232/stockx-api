@@ -16,10 +16,7 @@ export default class UserApi extends Api {
                     'sec-fetch-site': 'none',
                     'accept-language': 'en-US,en;q=0.9'
                 },
-                maxRedirects: 500,
             });
-
-            console.log(res.request.res);
 
             // todo: status checking
             const { request: { _header }, status } = res;
@@ -30,7 +27,6 @@ export default class UserApi extends Api {
                 throw err;
             }
 
-            console.log(_header);
             // Get state and client ID
             const state = _header.split('state=')[1].split('&')[0];
             const client_id = _header.split('client_id=')[1].split('&')[0];
@@ -58,7 +54,6 @@ export default class UserApi extends Api {
             }
 
             const { state, client_id } = await this.getState();
-            console.log(state, client_id);
             const { wa, wresult, wctx } = await this.submitCredentials({ state, client_id, username, password });
             
             return checkStatus({ wa, wresult, wctx });

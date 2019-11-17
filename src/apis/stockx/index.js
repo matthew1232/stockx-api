@@ -22,16 +22,16 @@ export default class StockX {
 
         //Configure options
         this.currency = currency;
-        this.cookieJar = new CookieJar();
         this.proxy = proxy ? format(proxy) : null;
 
-        this.context = {
+        this._jar = new CookieJar();
+        this._context = {
             currency: this.currency,
-            jar: this.cookieJar,
+            jar: this._jar,
             baseURL: 'https://stockx.com/api',
             headers: {
-                origin: 'https://accounts.stockx.com',
-                host: 'accounts.stockx.com',
+                origin: 'https://stockx.com',
+                host: 'stockx.com',
                 'sec-fetch-mode': 'cors',
                 'accept-language': 'en-US,en;q=0.9',
                 'x-requested-with': 'XMLHttpRequest',
@@ -48,10 +48,10 @@ export default class StockX {
         };
 
         // sub-module constructors
-        this.products = new ProductsApi(this.context);
-        this.asks = new AsksApi(this.context);
-        this.bids = new BidsApi(this.context);
-        this.user = new UserApi(this.context);
+        this.products = new ProductsApi(this._context);
+        this.asks = new AsksApi(this._context);
+        this.bids = new BidsApi(this._context);
+        this.user = new UserApi(this._context);
     };
 
     // /**

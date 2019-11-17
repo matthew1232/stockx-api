@@ -13,7 +13,7 @@ export default class AsksApi extends Api {
                 throw new Error('Invalid amount and/or variant id!');
             }
 
-            const res = await this.axios({
+            const res = await this._axios({
                 method: 'POST',
                 url: 'https://stockx.com/api/portfolio?a=ask',
                 headers: {
@@ -58,7 +58,7 @@ export default class AsksApi extends Api {
                 throw new Error('Invalid amount and/or variant id!');
             }
 
-            const res = await this.axios({
+            const res = await this._axios({
                 method: 'POST',
                 url: 'https://stockx.com/api/portfolio?a=ask',
                 headers: {

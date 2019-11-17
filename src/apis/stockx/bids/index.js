@@ -16,7 +16,7 @@ export default class BidsApi extends Api {
                 throw new Error('Please login first!');
             }
 
-            const res = await this.axios({
+            const res = await this._axios({
                 method: 'POST',
                 url: 'https://stockx.com/api/portfolio?a=bid',
                 headers: {
@@ -64,7 +64,7 @@ export default class BidsApi extends Api {
                 throw new Error('Please login first!');
             }
 
-            const res = await this.axios({
+            const res = await this._axios({
                 method: 'POST',
                 url: 'https://stockx.com/api/portfolio?a=bid',
                 headers: {

@@ -6,19 +6,27 @@ export default class ProductsApi extends Api {
     async search(query, options = {}) {
         const { limit, type } = options;
 
-        let url = `https://stockx.com/api/browse?&_search=${query}`;
+        let url = `/browse?&_search=${query}`;
 
         if (type) {
             url += `&dataType=${dataType}`;
         }
 
         try {
-            const res = await this.axios({
+            const res = await this._axios({
                 method: 'GET',
                 url,
                 headers: {
-                    accept: 'application/json',
-                    'content-type': 'application/json',
+                    'sec-fetch-mode': 'cors',
+                    'accept-language': 'en-US,en;q=0.9',
+                    'authorization': '',
+                    'x-requested-with': 'XMLHttpRequest',
+                    'appos': 'web',
+                    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+                    'accept': '*/*',
+                    'authority': 'stockx.com',
+                    'sec-fetch-site': 'same-origin',
+                    'appversion': '0.1'
                 },
             });
 
@@ -36,6 +44,7 @@ export default class ProductsApi extends Api {
             });
 
         } catch (error) {
+            console.log(error);
             const err = new Error('Failed to complete search!');
             err.status = error.status || 404;
             throw err;
@@ -45,14 +54,22 @@ export default class ProductsApi extends Api {
     async details(product) {
         try {
             const { pathname } = new URL(product, 'https://stockx.com');
-            let url = `https://stockx.com/api/products/${pathname}?includes=market&currency=${this.currency}`;
+            let url = `/products${pathname}?includes=market&currency=${this.currency}`;
 
-            const res = await this.axios({
+            const res = await this._axios({
                 method: 'GET',
                 url,
                 headers: {
-                    accept: 'application/json',
-                    'content-type': 'application/json',
+                    'sec-fetch-mode': 'cors',
+                    'accept-language': 'en-US,en;q=0.9',
+                    'authorization': '',
+                    'x-requested-with': 'XMLHttpRequest',
+                    'appos': 'web',
+                    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+                    'accept': '*/*',
+                    'authority': 'stockx.com',
+                    'sec-fetch-site': 'same-origin',
+                    'appversion': '0.1'
                 },
             });
 

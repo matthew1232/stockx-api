@@ -13,10 +13,6 @@ export default (list, sorter, limit) => {
       return sorted;
     }
 
-    if (_limit > 0) {
-      return sorted.slice(_limit);
-    }
-
     // slice, then reverse elements to get the proper order
     return sorted.slice(0, _limit).reverse();
 };

@@ -2,8 +2,8 @@ import axios from 'axios';
 import axiosCookieJarSupport from 'axios-cookiejar-support';
 
 export default class Api {
-    constructor({ currency, jar, baseURL, proxy }) {
-        this.axios = axios.create({
+    constructor({ currency, jar, baseURL, headers, proxy }) {
+        this._axios = axios.create({
             baseURL,
             headers,
             proxy,
@@ -12,9 +12,10 @@ export default class Api {
         this.proxy = proxy;
 
         this.bearer = null;
+        this.isLoggedIn = false;
 
         // Monkey patch the jar support in..
-        axiosCookieJarSupport(instance);
-        instance.defaults.jar = jar;
+        axiosCookieJarSupport(this._axios);
+        this._axios.defaults.jar = jar;
     }
 }

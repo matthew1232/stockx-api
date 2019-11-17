@@ -1,6 +1,8 @@
 const { StockX } = require('../dist');
 
-const stockXController = new StockX();
+const stockXController = new StockX({
+  proxy: '127.0.0.1:8888'
+});
 
 // product search and detail fetch
 // stockXController.products.search('yeezy', { limit: 1 }).then(async res => {
@@ -12,10 +14,7 @@ const stockXController = new StockX();
 // });
 
 // login to account
-stockXController.user.login({
-    username: 'test',
-    password: 'test'
-}).then(res => {
+stockXController.user.login({ username: 'test', password: 'test' }).then(res => {
 
 }).catch(console.error);
 

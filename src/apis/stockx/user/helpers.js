@@ -41,9 +41,8 @@ export const getState = async fetch => {
 
 export const submitCredentials = async (fetch, { state, client_id, username, password }) => {
     try {
-        const res = await fetch({
+        const res = await fetch('https://accounts.stockx.com/usernamepassword/login', {
             method: 'POST',
-            url: 'https://accounts.stockx.com/usernamepassword/login',
             headers: {
                 'Host': 'accounts.stockx.com',
                 'sec-fetch-mode': 'cors',
@@ -69,6 +68,7 @@ export const submitCredentials = async (fetch, { state, client_id, username, pas
         });
 
         const { status } = res;
+        console.log(status);
         if (!status || (status && status !== 200)) {
             const err = new Error('Invalid response code!');
             err.status = status || 400;
@@ -88,7 +88,7 @@ export const submitCredentials = async (fetch, { state, client_id, username, pas
         return { wa, wctx, wresult };
     } catch (error) {
         // console.log(error);
-        const err = new Error(`Unable to login: ${error.message}!`);
+        const err = new Error(`Unable to login: ${error.message}`);
         err.status = error.status || 404;
         throw err;
     }
@@ -96,9 +96,8 @@ export const submitCredentials = async (fetch, { state, client_id, username, pas
 
 export const checkStatus = async (fetch, { wa, wresult, wctx }) => {
     try {
-        const res = await fetch({
+        const res = await fetch(`https://accounts.stockx.com/login/callback`, {
             method: 'POST',
-            url: `https://accounts.stockx.com/login/callback`,
             headers: {
                 origin: 'https://accounts.stockx.com',
                 host: 'accounts.stockx.com',
@@ -112,6 +111,7 @@ export const checkStatus = async (fetch, { wa, wresult, wctx }) => {
         });
 
         const { status } = res;
+        console.log(status);
         if (!status || (status && status !== 200)) {
             const err = new Error('Invalid response code!');
             err.status = status || 400;
@@ -120,7 +120,7 @@ export const checkStatus = async (fetch, { wa, wresult, wctx }) => {
 
         return true;
     } catch (error) {
-        const err = new Error(`Unable to login: ${error.message}!`);
+        const err = new Error(`Unable to login: ${error.message}`);
         err.status = error.status || 404;
         throw err;
     }

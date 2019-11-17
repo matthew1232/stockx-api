@@ -15,6 +15,7 @@ export default class UserApi extends Api {
             }
 
             const { state, client_id } = await getState(this._fetch);
+            console.log(state, client_id);
             const { wa, wresult, wctx } = await submitCredentials(this._fetch, { state, client_id, username, password });
             const isLoggedIn = await checkStatus(this._fetch, { wa, wresult, wctx });
 

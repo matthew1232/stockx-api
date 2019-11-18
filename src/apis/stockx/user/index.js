@@ -1,11 +1,10 @@
 import Api from '../../base';
 
 import { getState, submitCredentials, checkStatus } from './helpers';
-import { getCookie } from '../../../utils';
 
 export default class UserApi extends Api {
-  constructor({ currency, jar, baseURL, headers, proxy }) {
-    super({ currency, jar, baseURL, headers, proxy, name: 'User' });
+  constructor({ currency, jar, headers, proxy, bearer, isLoggedIn }) {
+    super({ currency, jar, headers, proxy, bearer, isLoggedIn, name: 'User' });
   }
 
   // todo:
@@ -20,15 +19,13 @@ export default class UserApi extends Api {
       }
 
       const { state, client_id } = await getState({
-        fetch: this._fetch,
+        request: this._request,
         jar: this._jar,
         proxy: this.proxy
       });
-      console.log(state, client_id);
-    //   console.log('cookies after first step: ');
-    //   await getCookie(this._jar, 'testetstestes');
+
       const { wa, wresult, wctx } = await submitCredentials({
-        fetch: this._fetch,
+        request: this._request,
         jar: this._jar,
         proxy: this.proxy,
         state,
@@ -36,25 +33,22 @@ export default class UserApi extends Api {
         username,
         password,
       });
-      console.log(wa, wresult, wctx);
-    //   console.log('cookies after second step: ');
-    //   await getCookie(this._jar, 'testetstestes');
+
       const isLoggedIn = await checkStatus({
-        fetch: this._fetch,
+        request: this._request,
         jar: this._jar,
         proxy: this.proxy, 
         wa,
         wresult,
         wctx
       });
-      console.log(isLoggedIn);
-    //   console.log('cookies after final step: ');
-    //   await getCookie(this.jar, 'testetstestes');
 
       if (isLoggedIn) {
-        this.isLoggedIn = true;
+        this._bearer = this._jar._jar.store.idx["stockx.com"]["/"].token;
+        this._isLoggedIn = true;
         return true;
       }
+
       return false;
     } catch (error) {
       const err = new Error(error.message || 'Unable to login!');

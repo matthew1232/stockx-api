@@ -1,37 +1,56 @@
+import moment from 'moment';
+
 import Api from '../../base';
+import { randomInclusive } from '../../../utils';
 
 export default class BidsApi extends Api {
-  constructor({ currency, jar, baseURL, headers, proxy }) {
-    super({ currency, jar, baseURL, headers, proxy, name: 'Bids' });
+  constructor({ currency, jar, headers, proxy, bearer, isLoggedIn }) {
+    super({ currency, jar, headers, proxy, bearer, isLoggedIn, name: 'Bids' });
   }
 
   // TODO!
   async list(options = {}) {}
 
-  async update(options = {}) {
-    const { amount, variantID, chainId } = options;
+  async update(bid = {}, options = {}) {
+    const { amount } = options;
     const expiresAt = moment().add(30, 'days').utc().format();
 
+    let chainId;
+    let skuUuid;
     try {
-      if (!amount || !variantID || !chainId) {
+      ({ chainId, skuUuid } = bid);
+      if (!amount || !skuUuid || !chainId) {
         throw new Error('Invalid amount, chainId, and/or variant id!');
       }
 
-      if (!this.bearer) {
+      if (!this._bearer) {
         throw new Error('Please login first!');
       }
 
-      const res = await this._fetch('/portfolio?a=bid', {
+      const res = await this._request('https://stockx.com/api/portfolio?a=bid', {
         method: 'POST',
         headers: {
-          host: 'stockx.com',
-          origin: 'https://stockx.com',
-          authorization: `Bearer ${this.bearer}`,
+          'Host': 'stockx.com',
+          'sec-fetch-mode': 'cors',
+          'origin': 'https://stockx.com',
+          'authorization': `Bearer ${this._bearer}`,
+          'content-type': 'application/json',
+          'appos': 'web',
+          'x-requested-with': 'XMLHttpRequest',
+          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+          'appversion': '0.1',
+          'accept': '*/*',
+          'sec-fetch-site': 'same-origin',
+          'accept-language': 'en-US,en;q=0.9',
         },
-        body: {
+        jar: this._jar,
+        proxy: this.proxy,
+        simple: false,
+        resolveWithFullResponse: true,
+        json: {
           PortfolioItem: {
             localAmount: amount,
-            skuUuid: variantID,
+            skuUuid,
             localCurrency: this.currency,
             expiresAt,
             chainId,
@@ -39,16 +58,15 @@ export default class BidsApi extends Api {
         },
       });
 
-      const { status } = res;
-      if (!status || (status && status !== 200)) {
+      const { statusCode, body } = res;
+      if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid status code!');
-        err.status = status || 404;
+        err.status = statusCode || 404;
         throw err;
       }
 
-      const { data: { PortfolioItem: { chainId: id }} } = res;
-
-      return { id };
+      ({ PortfolioItem: { chainId, skuUuid }} = body);
+      return { chainId, skuUuid };
     } catch (error) {
       const err = new Error(`Unable to update bid: ${error.message}`);
       err.status = error.status || 404;
@@ -56,46 +74,62 @@ export default class BidsApi extends Api {
     }
   }
 
-  async place(options = {}) {
-    const { amount, variantID } = options;
+  async place(product, options = {}) {
+    const { amount, size } = options;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     try {
-      if (!amount || !variantID) {
-        throw new Error('Invalid amount and/or variant id!');
+      if (!amount || !size || !product) {
+        throw new Error('Invalid product, amount, and/or size!');
       }
 
-      if (!this.bearer) {
+      if (!this._bearer) {
         throw new Error('Please login first!');
       }
 
-      const res = await this._fetch('/portfolio?a=bid', {
+      const desiredSize = /random/i.test(size) ? randomInclusive(product.variants) : product.variants.find(v => v.size === size);
+
+      if (!desiredSize || (desiredSize && !desiredSize.uuid)) {
+        throw new Error('No size found!');
+      }
+
+      const { uuid } = desiredSize;
+
+      const res = await this._request('https://stockx.com/api/portfolio?a=bid', {
         method: 'POST',
         headers: {
-          host: 'stockx.com',
-          origin: 'https://stockx.com',
-          authorization: `Bearer ${this.bearer}`,
-        },
+          'Host': 'stockx.com',
+          'sec-fetch-mode': 'cors',
+          'origin': 'https://stockx.com',
+          'authorization': `Bearer ${this._bearer}`,
+          'content-type': 'application/json',
+          'appos': 'web',
+          'x-requested-with': 'XMLHttpRequest',
+          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+          'appversion': '0.1',
+          'accept': '*/*',
+          'sec-fetch-site': 'same-origin',
+          'accept-language': 'en-US,en;q=0.9',
+      },
         body: {
           PortfolioItem: {
             localAmount: amount,
-            skuUuid: variantID,
+            skuUuid: uuid,
             localCurrency: this.currency,
             expiresAt,
           },
         },
       });
 
-      const { status } = res;
-      if (!status || (status && status !== 200)) {
+      const { statusCode, body } = res;
+      if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid response code!');
-        err.status = status || 404;
+        err.status = statusCode || 404;
         throw err;
       }
 
-      const { data: { PortfolioItem: { chainId: id }} } = res;
-
-      return { id };
+      const { PortfolioItem: { chainId, skuUuid } } = body;
+      return { chainId, skuUuid };
     } catch (error) {
       const err = new Error(`Unable to place bid: ${error.message}`);
       err.status = error.status || 404;

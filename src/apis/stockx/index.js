@@ -1,5 +1,5 @@
 
-import { CookieJar } from 'tough-cookie';
+import { jar } from 'request-promise-native';
 
 // APIs
 import ProductsApi from './products';
@@ -11,6 +11,11 @@ import UserApi from './user';
 import { format, currencies } from '../../utils';
 
 export default class StockX {
+
+  get isLoggedIn() {
+    return this._isLoggedIn;
+  }
+
   /**
    *
    * @param {Object} options
@@ -23,28 +28,30 @@ export default class StockX {
     //Configurable options
     this.currency = currency;
     this.proxy = proxy ? format(proxy) : null;
+    
+    this._bearer = null;
+    this._isLoggedIn = false;
 
-    this._jar = new CookieJar();
     this._context = {
       currency: this.currency,
-      jar: this._jar,
-      baseURL: 'https://stockx.com/api',
+      jar: jar(),
       headers: {
-        origin: 'https://stockx.com',
-        host: 'stockx.com',
-        'sec-fetch-mode': 'cors',
+        'accept': '*/*',
         'accept-language': 'en-US,en;q=0.9',
-        'x-requested-with': 'XMLHttpRequest',
-        'upgrade-insecure-requests': 1,
-        appos: 'web',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-        accept: '*/*',
-        authority: 'stockx.com',
+        'appos': 'web',
+        'appversion': '0.1',
+        'authority': 'stockx.com',
+        'host': 'stockx.com',
+        'origin': 'https://stockx.com',
+        'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-origin',
-        appversion: '0.1',
-        'content-type': 'application/json',
+        'upgrade-insecure-requests': 1,
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+        'x-requested-with': 'XMLHttpRequest',
       },
       proxy: this.proxy,
+      bearer: this._bearer,
+      isLoggedIn: this._isLoggedIn,
     };
 
     // sub-module constructors

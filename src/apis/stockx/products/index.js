@@ -3,22 +3,21 @@ import Api from '../../base';
 import { filterAndLimit } from '../../../utils';
 
 export default class ProductsApi extends Api {
-  constructor({ currency, jar, baseURL, headers, proxy }) {
-    super({ currency, jar, baseURL, headers, proxy, name: 'Products' });
+  constructor({ currency, jar, headers, proxy, bearer, isLoggedIn }) {
+    super({ currency, jar, headers, proxy, bearer, isLoggedIn, name: 'Products' });
   }
 
   async search(query, options = {}) {
     const { limit, type } = options;
 
-    let url = `/browse?&_search=${query}`;
+    let url = `https://stockx.com/api/browse?&_search=${query}`;
 
     if (type) {
-      url += `&dataType=${dataType}`;
+      url += `&dataType=${type}`;
     }
 
     try {
-      const res = await this._fetch({
-        url,
+      const res = await this._request(url, {
         headers: {
           'sec-fetch-mode': 'cors',
           'accept-language': 'en-US,en;q=0.9',
@@ -31,10 +30,13 @@ export default class ProductsApi extends Api {
           'sec-fetch-site': 'same-origin',
           'appversion': '0.1'
         },
+        simple: false,
+        resolveWithFullResponse: true,
+        json: true,
+        proxy: this.proxy,
       });
 
-      const { data: { Products } } = res;
-
+      const { Products } = res.body;
       const products = filterAndLimit(Products, null, limit);
 
       return products.map(product => {
@@ -55,10 +57,9 @@ export default class ProductsApi extends Api {
   async details(product) {
     try {
       const { pathname } = new URL(product, 'https://stockx.com');
-      let url = `/products${pathname}?includes=market&currency=${this.currency}`;
+      let url = `https://stockx.com/api/products${pathname}?includes=market&currency=${this.currency}`;
 
-      const res = await this._fetch({
-        url,
+      const res = await this._request(url, {
         headers: {
           'sec-fetch-mode': 'cors',
           'accept-language': 'en-US,en;q=0.9',
@@ -71,9 +72,12 @@ export default class ProductsApi extends Api {
           'sec-fetch-site': 'same-origin',
           'appversion': '0.1'
         },
+        simple: false,
+        resolveWithFullResponse: true,
+        json: true,
       });
 
-      const { data: { Product } } = res;
+      const { Product } = res.body;
       const { children, title, urlKey, styleId, uuid } = Product;
 
       const variants = [];

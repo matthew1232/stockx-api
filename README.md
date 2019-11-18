@@ -91,7 +91,7 @@ import { StockX } from 'stockx-api';
 
 const stockXController = new StockX({
     proxy: '127.0.0.1:80:user:pass',
-    currency: 'USD' // GBP, EUR, USD
+    currency: 'USD' // AUD, CAD, GBP, EUR, USD
 });
 ```
 

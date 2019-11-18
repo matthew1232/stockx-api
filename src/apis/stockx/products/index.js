@@ -5,7 +5,7 @@ import { filterAndLimit } from '../../../utils';
 export default class ProductsApi extends Api {
   async search(query, options = {}) {
     const { limit, type } = options;
-    const { proxy } = this.data;
+    const { proxy, headers } = this.data;
 
     let url = `https://stockx.com/api/browse?&_search=${query}`;
 
@@ -15,18 +15,7 @@ export default class ProductsApi extends Api {
 
     try {
       const res = await this._request(url, {
-        headers: {
-          'sec-fetch-mode': 'cors',
-          'accept-language': 'en-US,en;q=0.9',
-          'authorization': '',
-          'x-requested-with': 'XMLHttpRequest',
-          'appos': 'web',
-          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-          'accept': '*/*',
-          'authority': 'stockx.com',
-          'sec-fetch-site': 'same-origin',
-          'appversion': '0.1'
-        },
+        headers,
         simple: false,
         resolveWithFullResponse: true,
         json: true,
@@ -53,23 +42,12 @@ export default class ProductsApi extends Api {
 
   async details(product) {
     try {
-      const { currency } = this.data;
+      const { currency, headers } = this.data;
       const { pathname } = new URL(product, 'https://stockx.com');
       let url = `https://stockx.com/api/products${pathname}?includes=market&currency=${currency}`;
 
       const res = await this._request(url, {
-        headers: {
-          'sec-fetch-mode': 'cors',
-          'accept-language': 'en-US,en;q=0.9',
-          'authorization': '',
-          'x-requested-with': 'XMLHttpRequest',
-          'appos': 'web',
-          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-          'accept': '*/*',
-          'authority': 'stockx.com',
-          'sec-fetch-site': 'same-origin',
-          'appversion': '0.1'
-        },
+        headers,
         simple: false,
         resolveWithFullResponse: true,
         json: true,

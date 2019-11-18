@@ -8,7 +8,7 @@ export default class UserApi extends Api {
 
   async login(options = {}) {
     const { username, password } = options;
-    const { proxy, jar } = this.data;
+    const { headers, proxy, jar } = this.data;
 
     try {
       if (!username || !password) {
@@ -17,12 +17,14 @@ export default class UserApi extends Api {
 
       const { state, client_id } = await getState({
         request: this._request,
+        headers,
         jar,
         proxy,
       });
 
       const { wa, wresult, wctx } = await submitCredentials({
         request: this._request,
+        headers,
         jar,
         proxy,
         state,
@@ -33,6 +35,7 @@ export default class UserApi extends Api {
 
       const isLoggedIn = await checkStatus({
         request: this._request,
+        headers,
         jar,
         proxy, 
         wa,

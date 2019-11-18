@@ -9,7 +9,7 @@ export default class AsksApi extends Api {
 
   async update(ask = {}, options = {}) {
     const { amount } = options;
-    const { bearer, jar, proxy, currency } = this.data;
+    const { headers, bearer, jar, proxy, currency } = this.data;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     let chainId;
@@ -32,18 +32,9 @@ export default class AsksApi extends Api {
       const res = await this._request('https://stockx.com/api/portfolio?a=ask', {
         method: 'POST',
         headers: {
-          'Host': 'stockx.com',
-          'sec-fetch-mode': 'cors',
-          'origin': 'https://stockx.com',
-          'authorization': `Bearer ${bearer}`,
+          ...headers,
+          authorization: `Bearer ${bearer}`,
           'content-type': 'application/json',
-          'appos': 'web',
-          'x-requested-with': 'XMLHttpRequest',
-          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-          'appversion': '0.1',
-          'accept': '*/*',
-          'sec-fetch-site': 'same-origin',
-          'accept-language': 'en-US,en;q=0.9',
         },
         jar,
         proxy,
@@ -82,7 +73,7 @@ export default class AsksApi extends Api {
 
   async place(product, options = {}) {
     const { amount, size } = options;
-    const { bearer, currency } = this.data;
+    const { headers, bearer, currency } = this.data;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     try {
@@ -109,18 +100,9 @@ export default class AsksApi extends Api {
       const res = await this._request('https://stockx.com/api/portfolio?a=ask', {
         method: 'POST',
         headers: {
-          'Host': 'stockx.com',
-          'sec-fetch-mode': 'cors',
-          'origin': 'https://stockx.com',
-          'authorization': `Bearer ${bearer}`,
+          ...headers,
+          authorization: `Bearer ${bearer}`,
           'content-type': 'application/json',
-          'appos': 'web',
-          'x-requested-with': 'XMLHttpRequest',
-          'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
-          'appversion': '0.1',
-          'accept': '*/*',
-          'sec-fetch-site': 'same-origin',
-          'accept-language': 'en-US,en;q=0.9',
         },
         json: {
           PortfolioItem: {

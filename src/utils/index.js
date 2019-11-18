@@ -26,7 +26,7 @@ const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-const randomInclusive = set => set[getRandomInt(0, set.length)];
+const randomInclusive = set => set[getRandomInt(0, set.length - 1)];
 
 const currencies = {
   USD: 'USD',

@@ -41,7 +41,7 @@ const stockXController = new StockX();
     try {
         console.log('Logging in...');
         
-        //Logs in using account email and password
+        // Login using account email and password
         await stockXController.user.login({
             user: 'accountemailhere', 
             password: 'accountpassword'
@@ -49,31 +49,32 @@ const stockXController = new StockX();
         
         console.log('Successfully logged in!');
 
-        //Returns an array of products
+        // Returns an array of products
         const productList = await stockXController.products.search('yeezy');
         
-        //Fetch variants and product details of the first product
+        // Fetch variants and product details of the first product
         const product = await stockXController.products.fetch(productList[0]);
         
-        console.log('Placing an ask for ' + product.name);
+        console.log('Placing an ask for ' + product.title);
 
-        //Places an ask on that product
+        // Places an ask on that product
         const ask = await stockXController.asks.place(product, {
             amount: 5000000000, 
             size: '9.5'
         });
         
-        console.log('Successfully placed an ask for $5000 for ' + product.name);
+        console.log('Successfully placed an ask for $5000 for ' + product.title);
         
-        //Updates the previous ask
+        // Updates the previous ask
         await stockXController.asks.update(ask, {
             amount: 600000
         });
         
-        console.log('Updated previous ask!');
+        console.log(`Updated ask: ${ask.chainId}`);
     }
     catch(e){
         console.log('Error: ' + e.message);
+        console.log('Status: ' + e.status);
     }
 })();
 ```
@@ -90,7 +91,7 @@ For example:
 import { StockX } from 'stockx-api';
 
 const stockXController = new StockX({
-    proxy: '127.0.0.1:80:user:pass',
+    proxy: '127.0.0.1:8888',
     currency: 'USD' // AUD, CAD, GBP, EUR, USD
 });
 ```
@@ -148,8 +149,8 @@ const stockXController = new Stockx();
 ## User
 
 #### Login
-You can login to StockX by using the `login` method. This takes in 2 parameters in the object
-* user - The account email/username
+You can login to StockX by using the `login` method. This takes an Object parameter with two entries:
+* username - The account email
 * password - The account password
 
 For example:
@@ -165,7 +166,7 @@ const stockXController = new Stockx();
             password: 'accountpasswordhere',
         });
 
-        console.log(reply);
+        console.log(reply); // true || false
     } catch (error) {
         console.log(error.message);
         console.log(error.status);
@@ -178,12 +179,12 @@ const stockXController = new Stockx();
 ## Asks
 
 #### Place
-You can place an ask to stockX by using the `place` method. This takes in 3 parameters.
-* product - the product details
+You can place an ask to stockX by using the `place` method. This takes two paramters:
+* product - the product object (retrieved by `products.fetch()`)
 
-In the object:
+An Object:
 * amount - the price of the ask
-* size - the requested size
+* size - the desired size
 
 For example: 
 ```js
@@ -193,25 +194,25 @@ const stockXController = new Stockx();
 
 (async () => {
     try {
-        const reply = await stockXController.asks.login({
+        const reply = await stockXController.user.login({
             username: 'accountemailhere',
             password: 'accountpasswordhere',
         });
 
         console.log('Logged in!');
 
-        //Pull product details to place the ask
+        // Pull product details in order to place the ask
         const product = await stockXController.products.details('https://stockx.com/adidas-yeezy-boost-700-magnet');
 
-        console.log('Placing an ask for ' + product.name);
+        console.log('Placing an ask for ' + product.title);
 
-        //Place an ask on the product
+        // Place an ask on the product
         await stockXController.asks.place(product, {
             amount: 5000000000, 
             size: 'random'
         });
         
-        console.log(`Successfully placed an ask for $5000000000 [${product.name}]`);
+        console.log(`Successfully placed an ask for $5000000000 [${product.title}]`);
     } catch (error) {
         console.log(error.message);
         console.log(error.status);
@@ -220,47 +221,45 @@ const stockXController = new Stockx();
 ```
 
 #### Update
-You can edit a previously placed ask by using the `update` method. This takes in 2 parameters.
-* ask - the ask to update
+You can edit a previously placed ask by using the `update` method. This takes in 2 parameters:
+* ask - the ask object (retrieved from `asks.place()`)
 
-In the object:
-* amount - the price to set the ask to
+An Object:
+* amount - the new price to update the ask with
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+import { StockX } from 'stockx-api';
+
+const stockXController = new Stockx();
 
 (async () => {
-    console.log('Logging in...');
-
-    //Logs in before placing ask
-    await stockX.login({
-        user: 'accountemailhere', 
-        password: 'accountpassword'
+    const reply = await stockXController.user.login({
+       username: 'accountemailhere',
+       password: 'accountpasswordhere',
     });
 
     console.log('Successfully logged in!');
     
-    //Pull product details to place the ask
-    const product = await stockX.fetchProductDetails('https://stockx.com/adidas-yeezy-boost-700-magnet');
+    // Pull product details in order to place the ask
+    const product = await stockXController.products.fetch('https://stockx.com/adidas-yeezy-boost-700-magnet');
 
-    console.log('Placing a bid for ' + product.name);
+    console.log('Placing a ask for ' + product.title);
 
-    //Place an ask on that product
-    const ask = await stockX.placeBid(product, {
+    // Place an ask on that product
+    const ask = await stockXController.asks.place(product, {
         amount: 100000, 
         size: '9.5'
     });
     
-    console.log(`Successfully placed an ask for $100000 [${product.name}]`);
+    console.log(`Successfully placed an ask for $100000 [${product.title}]`);
 
-    //Update previously placed ask
-    await stockX.updateAsk(ask, {
+    // Update previously placed ask
+    await stockXController.asks.update(ask, {
         amount: 10000000
     });
     
-    console.log('Updated ask!');
+    console.log(`Updated ask: ${ask.chainId}`);
 })();
 ```
 
@@ -270,10 +269,10 @@ const stockX = new stockxAPI();
 
 #### Place
 You can place a bid to stockX by using the `place` method. This takes in 3 parameters, identical to placing an ask.
-* product - the product details
+* product - the product object (retrieved by `products.fetch()`)
 
-In the object:
-* amount - the price of the ask,
+An Object:
+* amount - the price of the ask
 * size - the size of the shoe
 
 For example: 
@@ -284,25 +283,25 @@ const stockXController = new Stockx();
 
 (async () => {
     try {
-        const reply = await stockXController.asks.login({
+        const reply = await stockXController.user.login({
             username: 'accountemailhere',
             password: 'accountpasswordhere',
         });
 
         console.log('Logged in!');
 
-        //Pull product details to place the ask
+        // Pull product details to place the ask
         const product = await stockXController.products.details('https://stockx.com/adidas-yeezy-boost-700-magnet');
 
-        console.log('Placing an ask for ' + product.name);
+        console.log('Placing an ask for ' + product.title);
 
-        //Place a bid on that product
+        // Place a bid on that product
         await stockXControler.bids.place(product, {
             amount: 100, 
             size: '9.5'
         });
         
-        console.log(`Successfully placed a bid for $100 [${product.name}]`);
+        console.log(`Successfully placed a bid for $100 [${product.title}]`);
     } catch (error) {
         console.log(error.message);
         console.log(error.status);
@@ -311,11 +310,11 @@ const stockXController = new Stockx();
 ```
 
 #### Update
-You can edit a previously placed bid by using the `update` method. This takes in 2 parameters.
-* bid - the bid to update
+You can edit a previously placed bid by using the `update` method. This takes in 2 parameters:
+* bid - a bid object (retrieved from `bids.place()`)
 
-In the object:
-* amount - the price to set the bid to
+An Object:
+* amount - the new price to update the bid with
 
 For example: 
 ```js
@@ -325,32 +324,32 @@ const stockXController = new Stockx();
 
 (async () => {
     try {
-        const reply = await stockXController.asks.login({
+        const reply = await stockXController.user.login({
             username: 'accountemailhere',
             password: 'accountpasswordhere',
         });
 
         console.log('Logged in!');
 
-        //Pull product details to place the ask
+        // Pull product details in order to place the ask
         const product = await stockXController.products.details('https://stockx.com/adidas-yeezy-boost-700-magnet');
 
-        console.log('Placing an bid for ' + product.name);
+        console.log('Placing an bid for ' + product.title);
 
-        //Place a bid on that product
+        // Place a bid on that product
         const bid = await stockXControler.bids.place(product, {
             amount: 100, 
             size: '9.5'
         });
 
-        console.log(`Successfully placed a bid for $100 [${product.name}]`);
+        console.log(`Successfully placed a bid for $100 [${product.title}]`);
 
-        //Place a bid on that product
+        // Update a bid on that product
         await stockXControler.bids.update(bid, {
             amount: 125, 
         });
         
-        console.log(`Successfully updated bid for $125 [${product.name}]`);
+        console.log(`Successfully updated bid for $125 [${product.title}]`);
     } catch (error) {
         console.log(error.message);
         console.log(error.status);

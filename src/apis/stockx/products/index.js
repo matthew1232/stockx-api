@@ -35,6 +35,7 @@ export default class ProductsApi extends Api {
       });
     } catch (error) {
       const err = new Error('Failed to complete search!');
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }
@@ -72,6 +73,7 @@ export default class ProductsApi extends Api {
 
     } catch (error) {
       const err = new Error('Failed to fetch product details!');
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }

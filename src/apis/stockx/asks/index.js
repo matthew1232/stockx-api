@@ -66,6 +66,7 @@ export default class AsksApi extends Api {
       return { chainId, skuUuid };
     } catch (error) {
       const err = new Error(`Unable to update ask: ${error.message}`);
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }
@@ -120,7 +121,6 @@ export default class AsksApi extends Api {
         if (statusCode === 400) {
           err.message = 'Account on hold!';
         }
-
         err.status = statusCode || 404;
         throw err;
       }
@@ -129,6 +129,7 @@ export default class AsksApi extends Api {
       return { chainId, skuUuid };
     } catch (error) {
       const err = new Error(`Unable to place ask: ${error.message}`);
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }

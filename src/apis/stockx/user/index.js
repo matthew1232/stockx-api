@@ -62,6 +62,7 @@ export default class UserApi extends Api {
 
     } catch (error) {
       const err = new Error(error.message || 'Unable to login!');
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }

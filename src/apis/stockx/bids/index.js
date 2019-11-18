@@ -61,6 +61,7 @@ export default class BidsApi extends Api {
       return { chainId, skuUuid };
     } catch (error) {
       const err = new Error(`Unable to update bid: ${error.message}`);
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }
@@ -124,6 +125,7 @@ export default class BidsApi extends Api {
       return { chainId, skuUuid };
     } catch (error) {
       const err = new Error(`Unable to place bid: ${error.message}`);
+      err.stack = error.stack || {};
       err.status = error.status || 404;
       throw err;
     }

@@ -25,6 +25,9 @@ stockXController.user
     //Places an ask on that product
     return stockXController.asks.place(product, { amount: 5000000000, size: '9.5' });
   })
-  .then(console.log)
+  .then(ask => 
+  {
+    console.log(`Successfully placed ask: ${ask.chainId}!`);
+  })
   .catch(console.error);
 

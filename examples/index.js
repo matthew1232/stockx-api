@@ -10,22 +10,21 @@ const stockXController = new StockX();
 
 
 // login to account
-stockXController.user.login({ username, password }).then(loggedIn => {
-    // product search and detail fetch
-    stockXController.products.search('yeezy', { limit: 1 }).then(async res => {
+stockXController.user
+  .login({ username, password })
+  .then(() => stockXController.products.search('yeezy', { limit: 1 }))
+  .then(([ { urlKey: productUrl }]) =>
+  {
+    console.log(productUrl);
+    return stockXController.products.details(productUrl);
+  })
+  .then(product =>
+  {
+    console.log('Placing an ask for ' + product.title);
 
-        const productUrl = res[0].urlKey;
-        console.log(productUrl);
-        const product = await stockXController.products.details(productUrl);
-
-        console.log('Placing an ask for ' + product.title);
-
-        //Places an ask on that product
-        const ask = await stockXController.asks.place(product, {
-            amount: 5000000000, 
-            size: '9.5'
-        });
-        console.log(ask);
-    });
-}).catch(console.error);
+    //Places an ask on that product
+    return stockXController.asks.place(product, { amount: 5000000000, size: '9.5' });
+  })
+  .then(console.log)
+  .catch(console.error);
 

@@ -4,15 +4,12 @@ import Api from '../../base';
 import { randomInclusive } from '../../../utils';
 
 export default class AsksApi extends Api {
-  constructor({ currency, jar, headers, proxy, bearer, isLoggedIn }) {
-    super({ currency, jar, headers, proxy, bearer, isLoggedIn, name: 'Asks' });
-  }
-
   // TODO!
   async list(options = {}) {}
 
   async update(ask = {}, options = {}) {
     const { amount } = options;
+    const { bearer, jar, proxy, currency } = this.data;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     let chainId;
@@ -21,11 +18,15 @@ export default class AsksApi extends Api {
       ({ chainId, skuUuid } = ask);
 
       if (!amount || !skuUuid || !chainId) {
-        throw new Error('Invalid amount product id, and/or ask id!');
+        const error = new Error('Invalid amount product id, and/or ask id!');
+        error.status = 404;
+        throw error;
       }
 
-      if (!this._bearer) {
-        throw new Error('Please login first!');
+      if (!bearer) {
+        const error = new Error('Please login first!');
+        error.status = 401;
+        throw error;
       }
 
       const res = await this._request('https://stockx.com/api/portfolio?a=ask', {
@@ -34,7 +35,7 @@ export default class AsksApi extends Api {
           'Host': 'stockx.com',
           'sec-fetch-mode': 'cors',
           'origin': 'https://stockx.com',
-          'authorization': `Bearer ${this._bearer}`,
+          'authorization': `Bearer ${bearer}`,
           'content-type': 'application/json',
           'appos': 'web',
           'x-requested-with': 'XMLHttpRequest',
@@ -44,15 +45,15 @@ export default class AsksApi extends Api {
           'sec-fetch-site': 'same-origin',
           'accept-language': 'en-US,en;q=0.9',
         },
-        jar: this._jar,
-        proxy: this.proxy,
+        jar,
+        proxy,
         simple: false,
         resolveWithFullResponse: true,
         json: {
           PortfolioItem: {
             localAmount: amount,
             skuUuid,
-            localCurrency: this.currency,
+            localCurrency: currency,
             expiresAt: expiresAt,
             chainId,
           },
@@ -62,6 +63,10 @@ export default class AsksApi extends Api {
       const { statusCode, body } = res;
       if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid response code!');
+        if (statusCode === 400) {
+          err.message = 'Account on hold!';
+        }
+
         err.status = statusCode || 404;
         throw err;
       }
@@ -69,7 +74,7 @@ export default class AsksApi extends Api {
       ({ PortfolioItem: { chainId, skuUuid }} = body);
       return { chainId, skuUuid };
     } catch (error) {
-      const err = new Error(`Unable to place ask: ${error.message}`);
+      const err = new Error(`Unable to update ask: ${error.message}`);
       err.status = error.status || 404;
       throw err;
     }
@@ -77,15 +82,20 @@ export default class AsksApi extends Api {
 
   async place(product, options = {}) {
     const { amount, size } = options;
+    const { bearer, currency } = this.data;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     try {
       if (!amount || !size || !product) {
-        throw new Error('Invalid product, amount, and/or size!');
+        const error = new Error('Invalid product, amount, and/or size!');
+        error.status = 404;
+        throw error;
       }
 
-      if (!this._bearer) {
-        throw new Error('Please login first!');
+      if (!bearer) {
+        const error = new Error('Please login first!');
+        error.status = 401;
+        throw error;
       }
 
       const desiredSize = /random/i.test(size) ? randomInclusive(product.variants) : product.variants.find(v => v.size === size);
@@ -102,7 +112,7 @@ export default class AsksApi extends Api {
           'Host': 'stockx.com',
           'sec-fetch-mode': 'cors',
           'origin': 'https://stockx.com',
-          'authorization': `Bearer ${this._bearer}`,
+          'authorization': `Bearer ${bearer}`,
           'content-type': 'application/json',
           'appos': 'web',
           'x-requested-with': 'XMLHttpRequest',
@@ -112,11 +122,11 @@ export default class AsksApi extends Api {
           'sec-fetch-site': 'same-origin',
           'accept-language': 'en-US,en;q=0.9',
         },
-        body: {
+        json: {
           PortfolioItem: {
             localAmount: amount,
             skuUuid: uuid,
-            localCurrency: this.currency,
+            localCurrency: currency,
             expiresAt
           },
         },
@@ -125,6 +135,10 @@ export default class AsksApi extends Api {
       const { statusCode, body } = res;
       if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid response code!');
+        if (statusCode === 400) {
+          err.message = 'Account on hold!';
+        }
+
         err.status = statusCode || 404;
         throw err;
       }

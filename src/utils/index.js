@@ -29,9 +29,11 @@ const getRandomInt = (min, max) => {
 const randomInclusive = set => set[getRandomInt(0, set.length - 1)];
 
 const currencies = {
-  USD: 'USD',
-  GBP: 'GBP',
+  AUD: 'AUD',
+  CAD: 'CAD',
   EUR: 'EUR',
+  GBP: 'GBP',
+  USD: 'USD',
 }
 
 export { format, split, currencies, filterAndLimit, randomInclusive };

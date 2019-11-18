@@ -12,10 +12,6 @@ import { format, currencies } from '../../utils';
 
 export default class StockX {
 
-  get isLoggedIn() {
-    return this._isLoggedIn;
-  }
-
   /**
    *
    * @param {Object} options

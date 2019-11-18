@@ -3,15 +3,12 @@ import Api from '../../base';
 import { getState, submitCredentials, checkStatus } from './helpers';
 
 export default class UserApi extends Api {
-  constructor({ currency, jar, headers, proxy, bearer, isLoggedIn }) {
-    super({ currency, jar, headers, proxy, bearer, isLoggedIn, name: 'User' });
-  }
-
   // todo:
   async logout(options = {}) {}
 
   async login(options = {}) {
     const { username, password } = options;
+    const { proxy, jar } = this.data;
 
     try {
       if (!username || !password) {
@@ -20,14 +17,14 @@ export default class UserApi extends Api {
 
       const { state, client_id } = await getState({
         request: this._request,
-        jar: this._jar,
-        proxy: this.proxy
+        jar,
+        proxy,
       });
 
       const { wa, wresult, wctx } = await submitCredentials({
         request: this._request,
-        jar: this._jar,
-        proxy: this.proxy,
+        jar,
+        proxy,
         state,
         client_id,
         username,
@@ -36,17 +33,24 @@ export default class UserApi extends Api {
 
       const isLoggedIn = await checkStatus({
         request: this._request,
-        jar: this._jar,
-        proxy: this.proxy, 
+        jar,
+        proxy, 
         wa,
         wresult,
         wctx
       });
 
       if (isLoggedIn) {
-        this._bearer = this._jar._jar.store.idx["stockx.com"]["/"].token;
-        this._isLoggedIn = true;
-        return true;
+        const { token } = jar._jar.store.idx["stockx.com"]["/"];
+        if (!token) {
+          const error = new Error('Invalid token!');
+          error.status = 401;
+          throw error;
+        }
+        const [bearer] = token.toString().split('token=')[1].split(';');
+        this.data.setBearer(bearer);
+        this.data.setIsLoggedIn(isLoggedIn);
+        return isLoggedIn;
       }
 
       return false;

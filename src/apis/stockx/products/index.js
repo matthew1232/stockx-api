@@ -3,12 +3,9 @@ import Api from '../../base';
 import { filterAndLimit } from '../../../utils';
 
 export default class ProductsApi extends Api {
-  constructor({ currency, jar, headers, proxy, bearer, isLoggedIn }) {
-    super({ currency, jar, headers, proxy, bearer, isLoggedIn, name: 'Products' });
-  }
-
   async search(query, options = {}) {
     const { limit, type } = options;
+    const { proxy } = this.data;
 
     let url = `https://stockx.com/api/browse?&_search=${query}`;
 
@@ -33,7 +30,7 @@ export default class ProductsApi extends Api {
         simple: false,
         resolveWithFullResponse: true,
         json: true,
-        proxy: this.proxy,
+        proxy,
       });
 
       const { Products } = res.body;
@@ -56,8 +53,9 @@ export default class ProductsApi extends Api {
 
   async details(product) {
     try {
+      const { currency } = this.data;
       const { pathname } = new URL(product, 'https://stockx.com');
-      let url = `https://stockx.com/api/products${pathname}?includes=market&currency=${this.currency}`;
+      let url = `https://stockx.com/api/products${pathname}?includes=market&currency=${currency}`;
 
       const res = await this._request(url, {
         headers: {

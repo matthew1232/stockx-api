@@ -7,56 +7,59 @@ export default class UserApi extends Api {
   async logout(options = {}) {}
 
   async login(options = {}) {
-    const { username, password } = options;
-    const { headers, proxy, jar } = this.data;
+    const { password, username } = options;
+    const { headers, jar, proxy } = this.data;
 
     try {
       if (!username || !password) {
-        throw new Error('Username and/or password not provided!');
+        throw new Error('Unable to login: Username and/or password not provided!');
       }
 
       const { state, client_id } = await getState({
-        request: this._request,
         headers,
         jar,
         proxy,
+        request: this._request,
       });
 
       const { wa, wresult, wctx } = await submitCredentials({
-        request: this._request,
+        client_id,
         headers,
         jar,
-        proxy,
-        state,
-        client_id,
-        username,
         password,
+        proxy,
+        request: this._request,
+        state,
+        username,
       });
 
       const isLoggedIn = await checkStatus({
-        request: this._request,
         headers,
         jar,
         proxy, 
+        request: this._request,
         wa,
+        wctx,
         wresult,
-        wctx
       });
 
-      if (isLoggedIn) {
-        const { token } = jar._jar.store.idx["stockx.com"]["/"];
-        if (!token) {
-          const error = new Error('Invalid token!');
-          error.status = 401;
-          throw error;
-        }
-        const [bearer] = token.toString().split('token=')[1].split(';');
-        this.data.setBearer(bearer);
-        this.data.setIsLoggedIn(isLoggedIn);
-        return isLoggedIn;
+      if (!isLoggedIn) {
+        const error = new Error('Unable to login: Invalid callback response!');
+        error.status = 400;
+        throw error;
       }
 
-      return false;
+      const { token } = jar._jar.store.idx["stockx.com"]["/"];
+      if (!token) {
+        const error = new Error('Unable to login: Invalid token!');
+        error.status = 401;
+        throw error;
+      }
+      const [bearer] = token.toString().split('token=')[1].split(';');
+      this.data.setBearer(bearer);
+      this.data.setIsLoggedIn(isLoggedIn);
+      return isLoggedIn;
+
     } catch (error) {
       const err = new Error(error.message || 'Unable to login!');
       err.status = error.status || 404;

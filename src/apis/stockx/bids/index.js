@@ -29,16 +29,12 @@ export default class BidsApi extends Api {
       }
 
       const res = await this._request('https://stockx.com/api/portfolio?a=bid', {
-        method: 'POST',
         headers: {
           ...headers,
           authorization: `Bearer ${bearer}`,
           'content-type': 'application/json',
         },
         jar,
-        proxy,
-        simple: false,
-        resolveWithFullResponse: true,
         json: {
           PortfolioItem: {
             localAmount: amount,
@@ -48,6 +44,10 @@ export default class BidsApi extends Api {
             chainId,
           },
         },
+        method: 'POST',
+        proxy,
+        resolveWithFullResponse: true,
+        simple: false,
       });
 
       const { statusCode, body } = res;
@@ -93,7 +93,6 @@ export default class BidsApi extends Api {
       const { uuid } = desiredSize;
 
       const res = await this._request('https://stockx.com/api/portfolio?a=bid', {
-        method: 'POST',
         headers: {
           ...headers,
           authorization: `Bearer ${bearer}`,
@@ -107,6 +106,7 @@ export default class BidsApi extends Api {
             expiresAt,
           },
         },
+        method: 'POST',
       });
 
       const { statusCode, body } = res;

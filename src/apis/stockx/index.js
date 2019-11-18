@@ -32,13 +32,13 @@ export default class StockX {
       currency: this.currency,
       jar: jar(),
       headers: {
-        'accept': '*/*',
+        accept: '*/*',
         'accept-language': 'en-US,en;q=0.9',
-        'appos': 'web',
-        'appversion': '0.1',
-        'authority': 'stockx.com',
-        'host': 'stockx.com',
-        'origin': 'https://stockx.com',
+        appos: 'web',
+        appversion: '0.1',
+        authority: 'stockx.com',
+        host: 'stockx.com',
+        origin: 'https://stockx.com',
         'sec-fetch-mode': 'cors',
         'sec-fetch-site': 'same-origin',
         'upgrade-insecure-requests': 1,
@@ -56,82 +56,6 @@ export default class StockX {
     this.bids = new BidsApi(this._context);
     this.user = new UserApi(this._context);
   };
-
-    // /**
-    //  *
-    //  * @param {string} query - The query string to search for
-    //  * @param {Object=} options
-    //  * @param {Number=} options.limit - The limit on how many products to return at max
-    //  */
-    // async search(query, options = {}) {
-    //     //Search products and return them
-    //     const { limit } = options;
-
-    //     try {
-    //         const products = await this.products.search(query, {
-    //             type: 'product',
-    //             limit,
-    //         });
-
-    //         return products;
-    //     } catch (error) {
-    //         if (error.response) {
-    //             // The request was made and the server responded with a status code
-    //             // that falls out of the range of 2xx
-    //             console.log(error.response.data);
-    //             console.log(error.response.status);
-    //             console.log(error.response.headers);
-    //           } else if (error.request) {
-    //             // The request was made but no response was received
-    //             // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-    //             // http.ClientRequest in node.js
-    //             console.log(error.request);
-    //           } else {
-    //             // Something happened in setting up the request that triggered an Error
-    //             console.log('Error', error.message);
-    //           }
-    //     }
-    // };
-
-    // /**
-    //  *
-    //  * @param {string|Object} product - The product URL or object to fetch from
-    //  */
-    // async fetchProductDetails(product){
-    //     //Fetch products and return them
-    //     const products = await fetchProductDetails(product, {
-    //         currency: this.currency,
-    //         proxy: this.proxy
-    //     });
-
-    //     return products;
-    // };
-
-    // /**
-    //  *
-    //  * @param {Object} options
-    //  * @param {string} options.user - The user/email to login with
-    //  * @param {string} options.password - The password to login with
-    //  */
-    // async login(options = {}){
-    //     const { user, password } = options;
-
-    //     //Create login
-    //     await login({
-    //         user,
-    //         password,
-    //         proxy: this.proxy,
-    //         cookieJar: this.cookieJar
-    //     });
-
-    //     //Verify a token was created
-    //     this.token = this.cookieJar._jar.store.idx["stockx.com"]["/"].token;
-    //     if (this.token == undefined) throw new Error("No login token found!");
-
-    //     //Store the account token as a local class variable
-    //     this.token = this.token.toString().split('token=')[1].split(';')[0];
-    //     this.loggedIn = true;
-    // };
 
     // /**
     //  *

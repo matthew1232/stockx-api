@@ -3,6 +3,8 @@ import cheerio from 'cheerio';
 export const getState = async ({ request, headers, jar, proxy }) => {
   try {
     const res = await request('https://stockx.com/login', {
+      followAllRedirects: true,
+      followRedirect: true,  
       headers: {
         ...headers,
         accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
@@ -12,8 +14,6 @@ export const getState = async ({ request, headers, jar, proxy }) => {
       },
       jar,
       proxy,
-      followAllRedirects: true,
-      followRedirect: true,
       resolveWithFullResponse: true
     });
 
@@ -43,7 +43,6 @@ export const getState = async ({ request, headers, jar, proxy }) => {
 export const submitCredentials = async ({ request, headers, jar, proxy, state, client_id, username, password }) => {
   try {
     const res = await request('https://accounts.stockx.com/usernamepassword/login', {
-      method: 'POST',
       headers: {
         ...headers,
         'auth0-client': client_id,
@@ -52,9 +51,6 @@ export const submitCredentials = async ({ request, headers, jar, proxy, state, c
         origin: 'https://accounts.stockx.com',
       },
       jar,
-      proxy,
-      resolveWithFullResponse: true,
-      simple: false,
       json: {
         client_id,
         redirect_uri: 'https://stockx.com/callback?path=/',
@@ -68,6 +64,10 @@ export const submitCredentials = async ({ request, headers, jar, proxy, state, c
         _instate: 'deprecated',
         connection: 'production',
       },
+      method: 'POST',
+      proxy,
+      resolveWithFullResponse: true,
+      simple: false,
     });
 
     const { statusCode, body } = res;
@@ -95,9 +95,10 @@ export const submitCredentials = async ({ request, headers, jar, proxy, state, c
 
 export const checkStatus = async ({ request, headers, jar, proxy, wa, wresult, wctx }) => {
   try {
-    const res = await request({
-      url: `https://accounts.stockx.com/login/callback`,
-      method: 'POST',
+    const res = await request(`https://accounts.stockx.com/login/callback`, {
+      body: encodeURI(`wa=${wa}&wresult=${wresult}&wctx=${wctx}`),  
+      followAllRedirects: true,
+      followRedirect: true,  
       headers: {
         ...headers,
         accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
@@ -108,12 +109,10 @@ export const checkStatus = async ({ request, headers, jar, proxy, wa, wresult, w
         'sec-fetch-user': '?1',
       },
       jar,
+      method: 'POST',
       proxy,
-      followAllRedirects: true,
-      followRedirect: true,
-      simple: false,
       resolveWithFullResponse: true,
-      body: encodeURI(`wa=${wa}&wresult=${wresult}&wctx=${wctx}`),
+      simple: false,
     });
 
     const { statusCode } = res;

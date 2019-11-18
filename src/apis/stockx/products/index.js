@@ -16,10 +16,10 @@ export default class ProductsApi extends Api {
     try {
       const res = await this._request(url, {
         headers,
-        simple: false,
-        resolveWithFullResponse: true,
         json: true,
         proxy,
+        resolveWithFullResponse: true,
+        simple: false,
       });
 
       const { Products } = res.body;
@@ -48,9 +48,9 @@ export default class ProductsApi extends Api {
 
       const res = await this._request(url, {
         headers,
-        simple: false,
-        resolveWithFullResponse: true,
         json: true,
+        resolveWithFullResponse: true,
+        simple: false,
       });
 
       const { Product } = res.body;

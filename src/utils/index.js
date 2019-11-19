@@ -1,4 +1,5 @@
 import filterAndLimit from './filterAndLimit';
+import errors from './errors';
 
 const split = (input = '', delimiter) => input.split(delimiter);
 
@@ -28,6 +29,10 @@ const getRandomInt = (min, max) => {
 
 const randomInclusive = set => set[getRandomInt(0, set.length - 1)];
 
+const decodeHtmlEntity = str => {
+  return str.replace(/&#(\d+);/g, (match, dec) => String.fromCharCode(dec));
+};
+
 const currencies = {
   AUD: 'AUD',
   CAD: 'CAD',
@@ -36,4 +41,4 @@ const currencies = {
   USD: 'USD',
 }
 
-export { format, split, currencies, filterAndLimit, randomInclusive };
+export { format, split, errors, currencies, filterAndLimit, randomInclusive, decodeHtmlEntity };

@@ -1,16 +1,19 @@
 
 import { jar } from 'request-promise-native';
 
+// Context
+import SharedContext from '../context';
+
 // APIs
-import ProductsApi from './products';
-import AsksApi from './asks';
-import BidsApi from './bids';
-import UserApi from './user';
+import Products from './products';
+import Asks from './asks';
+import Bids from './bids';
+import User from './user';
 
 // Utils
 import { format, currencies } from '../../utils';
 
-export default class StockX {
+export default class StockX  {
 
   /**
    *
@@ -21,16 +24,9 @@ export default class StockX {
   constructor(options = {}){
     const { proxy = null, currency = currencies.USD } = options;
 
-    //Configurable options
-    this.currency = currency;
-    this.proxy = proxy ? format(proxy) : null;
-    
-    this._bearer = null;
-    this._isLoggedIn = false;
-
-    this._context = {
-      currency: this.currency,
-      jar: jar(),
+    this._context = new SharedContext({
+      bearer: null,
+      currency,
       headers: {
         accept: '*/*',
         'accept-language': 'en-US,en;q=0.9',
@@ -45,161 +41,24 @@ export default class StockX {
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
         'x-requested-with': 'XMLHttpRequest',
       },
-      proxy: this.proxy,
-      bearer: this._bearer,
-      isLoggedIn: this._isLoggedIn,
-    };
+      isLoggedIn: false,
+      jar: jar(),
+      proxy: proxy ? format(proxy) : null,
+    });
 
     // sub-module constructors
-    this.products = new ProductsApi(this._context);
-    this.asks = new AsksApi(this._context);
-    this.bids = new BidsApi(this._context);
-    this.user = new UserApi(this._context);
+    this.products = new Products(this._context);
+    this.asks = new Asks(this._context);
+    this.bids = new Bids(this._context);
+    this.user = new User(this._context);
   };
 
-    // /**
-    //  *
-    //  * @param {Object} product - The product object
-    //  * @param {Object} options
-    //  * @param {number} options.amount - The amount to place the bid for
-    //  * @param {string} options.size - The requested size
-    //  */
-    // async placeBid(product, options = {}){
-    //     //Convert amount to numeral type
-    //     const amount = Number(options.amount);
-    //     const requestedSize = options.size;
+  // expose mutation methods..
+  setCurrency(currency) {
+    this._context.setCurrency(currency);
+  }
 
-    //     //Verify fields passed in by user
-    //     if (!this.loggedIn) throw new Error("You must be logged in before placing a bid!");
-    //     else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
-    //     else if (requestedSize == undefined) throw new Error("Please specify a size to bid on!");
-    //     else if (product == undefined) throw new Error("A product must be specified!");
-    //     else if (typeof product == 'string') throw new Error("The product passed in must an object. Use fetchProductDetails() to get the details first.");
-    //     else if (product.variants == undefined) throw new Error("No variants found in product! Please check the product object passed in.");
-
-    //     //Get size from requestedSize in the product variants
-    //     const size = requestedSize.toLowerCase() == 'random' ? product.variants[Math.floor(Math.random() * product.variants.length)] : product.variants.find(variant => variant.size == requestedSize);
-
-    //     //Check if getting size was successful
-    //     if (size == undefined) throw new Error("No variant found for the requested size!");
-    //     if (size.uuid == undefined || size.uuid == "") throw new Error("No variant ID found for the requested size!");
-
-    //     //Place bid
-    //     const response = await placeBid(this.token, {
-    //         amount: amount,
-    //         variantID: size.uuid,
-    //         currency: this.currency,
-    //         cookieJar: this.cookieJar,
-    //         proxy: this.proxy
-    //     });
-
-    //     return response;
-    // };
-
-    // /**
-    //  *
-    //  * @param {Object} product - The product object
-    //  * @param {Object} options
-    //  * @param {number} options.amount - The amount to place the ask for
-    //  * @param {string} options.size - The requested size
-    //  */
-    // async placeAsk(product, options = {}){
-    //     //Convert amount to digit
-    //     const amount = Number(options.amount);
-    //     const requestedSize = options.size;
-
-    //     //Verify fields passed in by user
-    //     if (!this.loggedIn) throw new Error("You must be logged in before placing an ask!");
-    //     else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
-    //     else if (requestedSize == undefined) throw new Error("Please specify a size to place an ask on!");
-    //     else if (product == undefined) throw new Error("A product must be specified!");
-    //     else if (typeof product == 'string') throw new Error("The product passed in must an object. Use fetchProductDetails() to get the details first.");
-    //     else if (product.variants == undefined) throw new Error("No variants found in product! Please check the product object passed in.");
-
-    //     //Get size from requestedSize in the product variants
-    //     const size = requestedSize.toLowerCase() == 'random' ? product.variants[Math.floor(Math.random() * product.variants.length)] : product.variants.find(variant => variant.size == requestedSize);
-
-    //     //Check if getting size was successful
-    //     if (size == undefined) throw new Error("No variant found for the requested size!");
-    //     if (size.uuid == undefined || size.uuid == "") throw new Error("No variant ID found for the requested size!");
-
-    //     //Place ask
-    //     const response = await placeAsk(this.token, {
-    //         amount,
-    //         variantID: size.uuid,
-    //         currency: this.currency,
-    //         cookieJar: this.cookieJar,
-    //         proxy: this.proxy
-    //     });
-
-    //     return response;
-    // };
-
-    // /**
-    //  *
-    //  * @param {Object} ask - The previous ask object
-    //  * @param {Object} options
-    //  * @param {number} options.amount - The amount to update the ask to
-    //  */
-    // async updateAsk(ask, options = {}){
-    //     //Convert amount to digit
-    //     const amount = Number(options.amount);
-
-    //     //Verify fields passed in by user
-    //     if (!this.loggedIn) throw new Error("You must be logged in before placing an ask!");
-    //     else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
-    //     else if (ask == undefined) throw new Error("Ask is incorrect, please ensure your paramaters are correctly formatted.");
-
-    //     //Get size from previous ask size
-    //     const size = ask.response.PortfolioItem.skuUuid;
-
-    //     //Check if getting size was successful
-    //     if (size == undefined) throw new Error("No variant found in ask!");
-
-    //     //Update ask
-    //     const response = await updateAsk(this.token, {
-    //         amount,
-    //         variantID: size,
-    //         askID: ask.id,
-    //         currency: this.currency,
-    //         cookieJar: this.cookieJar,
-    //         proxy: this.proxy
-    //     });
-
-    //     return response;
-    // };
-
-    // /**
-    //  *
-    //  * @param {Object} bid - The previous bid object
-    //  * @param {Object} options
-    //  * @param {number} options.amount - The amount to update the bid to
-    //  */
-    // async updateBid(bid, options = {}){
-    //     //Convert amount to digit
-    //     const amount = Number(options.amount);
-
-    //     //Verify fields passed in by user
-    //     if (!this.loggedIn) throw new Error("You must be logged in before placing a bid!");
-    //     else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
-    //     else if (bid == undefined) throw new Error("Ask is incorrect, please ensure your paramaters are correctly formatted.");
-
-    //     //Get size from previous ask size
-    //     const size = bid.response.PortfolioItem.skuUuid;
-
-    //     //Check if getting size was successful
-    //     if (size == undefined) throw new Error("No variant found in bid!");
-
-    //     //Update ask
-    //     const response = await updateBid(this.token, {
-    //         amount,
-    //         variantID: size,
-    //         bidID: bid.id,
-    //         currency: this.currency,
-    //         cookieJar: this.cookieJar,
-    //         proxy: this.proxy
-    //     });
-
-    //     return response;
-    // };
+  setProxy(proxy) {
+    this._context.setProxy(proxy);
+  }
 };

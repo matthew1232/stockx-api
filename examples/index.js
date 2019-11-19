@@ -1,13 +1,12 @@
 require('dotenv').config();
 
-const { StockX } = require('../dist');
+const StockX = require('../dist').default;
 
 const { username, password } = process.env;
 
 const stockXController = new StockX();
 // if you're using charlesproxy, make sure it's launched and use the controller below!
 // const stockXController = new StockX({ proxy: '127.0.0.1:8888' });
-
 
 // login to account
 stockXController.user

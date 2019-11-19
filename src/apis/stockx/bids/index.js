@@ -1,21 +1,19 @@
 import moment from 'moment';
 
-import Api from '../../base';
-import { randomInclusive } from '../../../utils';
+import Base from '../../base';
+import { randomInclusive, errors } from '../../../utils';
 
-export default class BidsApi extends Api {
+export default class Bids extends Base {
   // TODO!
   async list(options = {}) {}
 
   async update(bid = {}, options = {}) {
     const { amount } = options;
-    const { headers, bearer, jar, proxy, currency } = this.data;
+    const { bearer, currency, headers, jar, proxy, request } = this.context;
     const expiresAt = moment().add(30, 'days').utc().format();
 
-    let chainId;
-    let skuUuid;
     try {
-      ({ chainId, skuUuid } = bid);
+      let { chainId, skuUuid } = bid;
       if (!amount || !skuUuid || !chainId) {
         const error = new Error('Invalid amount product id, and/or ask id!');
         error.status = 404;
@@ -28,7 +26,7 @@ export default class BidsApi extends Api {
         throw error;
       }
 
-      const res = await this._request('https://stockx.com/api/portfolio?a=bid', {
+      const res = await request('https://stockx.com/api/portfolio?a=bid', {
         headers: {
           ...headers,
           authorization: `Bearer ${bearer}`,
@@ -60,16 +58,13 @@ export default class BidsApi extends Api {
       ({ PortfolioItem: { chainId, skuUuid }} = body);
       return { chainId, skuUuid };
     } catch (error) {
-      const err = new Error(`Unable to update bid: ${error.message}`);
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'update bid');
     }
   }
 
   async place(product, options = {}) {
     const { amount, size } = options;
-    const { headers, bearer, currency } = this.data;
+    const { bearer, currency, headers, request } = this.context;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     try {
@@ -88,12 +83,14 @@ export default class BidsApi extends Api {
       const desiredSize = /random/i.test(size) ? randomInclusive(product.variants) : product.variants.find(v => v.size === size);
 
       if (!desiredSize || (desiredSize && !desiredSize.uuid)) {
-        throw new Error('No size found!');
+        const error = new Error('Size not found!');
+        error.status = 404;
+        throw error;
       }
 
       const { uuid } = desiredSize;
 
-      const res = await this._request('https://stockx.com/api/portfolio?a=bid', {
+      const res = await request('https://stockx.com/api/portfolio?a=bid', {
         headers: {
           ...headers,
           authorization: `Bearer ${bearer}`,
@@ -113,10 +110,6 @@ export default class BidsApi extends Api {
       const { statusCode, body } = res;
       if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid response code!');
-        if (statusCode === 400) {
-          err.message = 'Account on hold!';
-        }
-
         err.status = statusCode || 404;
         throw err;
       }
@@ -124,10 +117,7 @@ export default class BidsApi extends Api {
       const { PortfolioItem: { chainId, skuUuid } } = body;
       return { chainId, skuUuid };
     } catch (error) {
-      const err = new Error(`Unable to place bid: ${error.message}`);
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'place bid');
     }
   }
 

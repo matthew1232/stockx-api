@@ -1,4 +1,6 @@
-import cheerio from 'cheerio';
+import parse from 'html-dom-parser';
+
+import { decodeHtmlEntity } from '../../../utils';
 
 export const getState = async ({ request, headers, jar, proxy }) => {
   try {
@@ -26,17 +28,18 @@ export const getState = async ({ request, headers, jar, proxy }) => {
     }
 
     // Get state and client ID
-    const state = _header.split('state=')[1].split('&')[0];
-    const client_id = _header.split('client=')[1].split('&')[0];
+    const [state] = _header.split('state=')[1].split('&');
+    const [client_id] = _header.split('client=')[1].split('&');
     if (!state || !client_id) {
-      throw new Error('Invalid State and/or Client ID!');
+      const err = new Error('Invalid State and/or Client ID!');
+      err.status = 404;
+      throw err;
     }
 
     return { state, client_id };
   } catch (error) {
-    const err = new Error(`Unable to login: ${error.message}`);
-    err.status = error.status || 404;
-    throw err;
+    // bubble this up...
+    throw error;
   }
 };
 
@@ -71,29 +74,57 @@ export const submitCredentials = async ({ request, headers, jar, proxy, state, c
     });
 
     const { statusCode, body } = res;
+
     if (!statusCode || (statusCode && statusCode === 401)) {
       const err = new Error('Invalid email and/or password!');
       err.status = statusCode || 404;
       throw err;
     }
 
-    const $ = cheerio.load(body);
-    const wa = $('input[name="wa"]').val();
-    const wctx = $('input[name="wctx"]').val();
-    const wresult = $('input[name="wresult"]').val();
+    let wa;
+    let wctx;
+    let wresult;
+    try {
+      const elements = parse(body);
+
+      if (!elements || !elements.length || elements.length !== 1) {
+        throw new Error('Invalid login form!');
+      }
+
+      const { children } = elements[0];
+      
+      children.forEach(child => {
+        if (child.name === 'input') {
+          const { name, value } = child.attribs;
+          if (/wa/i.test(name)) {
+            wa = value;
+          } else if (/wctx/i.test(name)) {
+            wctx = decodeHtmlEntity(value);
+          } else if (/wresult/i.test(name)) {
+            wresult = value;
+          }
+        }
+      });
+    } catch (err) {
+      const e = new Error('Invalid login form!');
+      e.status = 404;
+      throw e;
+    }
+
     if (!wa || !wctx || !wresult) {
-      throw new Error('Invalid parameters!');
+      const err = new Error('Invalid login form parameters!');
+      err.status = 404;
+      throw err;
     }
 
     return { wa, wctx, wresult };
   } catch (error) {
-    const err = new Error(`Unable to login: ${error.message}`);
-    err.status = error.status || 404;
-    throw err;
+    // bubble this up...
+    throw error;
   }
 }
 
-export const checkStatus = async ({ request, headers, jar, proxy, wa, wresult, wctx }) => {
+export const checkStatus = async ({ request, jar, proxy, wa, wresult, wctx }) => {
   try {
      const res = await request(`https://accounts.stockx.com/login/callback`, {
         body: encodeURI(`wa=${wa}&wresult=${wresult}&wctx=${wctx}`),  
@@ -127,8 +158,7 @@ export const checkStatus = async ({ request, headers, jar, proxy, wa, wresult, w
 
     return true;
   } catch (error) {
-    const err = new Error(`Unable to login: ${error.message}`);
-    err.status = error.status || 404;
-    throw err;
+    // bubble this up...
+    throw error;
   }
 }

@@ -1,21 +1,19 @@
 import moment from 'moment';
 
-import Api from '../../base';
-import { randomInclusive } from '../../../utils';
+import Base from '../../base';
+import { randomInclusive, errors } from '../../../utils';
 
-export default class AsksApi extends Api {
+export default class Asks extends Base {
   // TODO!
   async list(options = {}) {}
 
   async update(ask = {}, options = {}) {
     const { amount } = options;
-    const { headers, bearer, jar, proxy, currency } = this.data;
+    const { bearer, currency, headers, jar, proxy, request } = this.context;
     const expiresAt = moment().add(30, 'days').utc().format();
 
-    let chainId;
-    let skuUuid;
     try {
-      ({ chainId, skuUuid } = ask);
+      let { chainId, skuUuid } = ask;
 
       if (!amount || !skuUuid || !chainId) {
         const error = new Error('Invalid amount product id, and/or ask id!');
@@ -29,7 +27,7 @@ export default class AsksApi extends Api {
         throw error;
       }
 
-      const res = await this._request('https://stockx.com/api/portfolio?a=ask', {
+      const res = await request('https://stockx.com/api/portfolio?a=ask', {
         headers: {
           ...headers,
           authorization: `Bearer ${bearer}`,
@@ -54,10 +52,6 @@ export default class AsksApi extends Api {
       const { statusCode, body } = res;
       if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid response code!');
-        if (statusCode === 400) {
-          err.message = 'Account on hold!';
-        }
-
         err.status = statusCode || 404;
         throw err;
       }
@@ -65,16 +59,13 @@ export default class AsksApi extends Api {
       ({ PortfolioItem: { chainId, skuUuid }} = body);
       return { chainId, skuUuid };
     } catch (error) {
-      const err = new Error(`Unable to update ask: ${error.message}`);
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'update ask');
     }
   }
 
   async place(product, options = {}) {
     const { amount, size } = options;
-    const { headers, bearer, currency } = this.data;
+    const { bearer, currency, headers, request } = this.context;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     try {
@@ -93,12 +84,14 @@ export default class AsksApi extends Api {
       const desiredSize = /random/i.test(size) ? randomInclusive(product.variants) : product.variants.find(v => v.size === size);
 
       if (!desiredSize || (desiredSize && !desiredSize.uuid)) {
-        throw new Error('No size found!');
+        const error = new Error('Size not found!');
+        error.status = 404;
+        throw error;
       }
 
       const { uuid } = desiredSize;
 
-      const res = await this._request('https://stockx.com/api/portfolio?a=ask', {
+      const res = await request('https://stockx.com/api/portfolio?a=ask', {
         headers: {
           ...headers,
           authorization: `Bearer ${bearer}`,
@@ -118,9 +111,6 @@ export default class AsksApi extends Api {
       const { statusCode, body } = res;
       if (!statusCode || (statusCode && statusCode !== 200)) {
         const err = new Error('Invalid response code!');
-        if (statusCode === 400) {
-          err.message = 'Account on hold!';
-        }
         err.status = statusCode || 404;
         throw err;
       }
@@ -128,10 +118,7 @@ export default class AsksApi extends Api {
       const { PortfolioItem: { chainId, skuUuid }} = body;
       return { chainId, skuUuid };
     } catch (error) {
-      const err = new Error(`Unable to place ask: ${error.message}`);
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'place ask');
     }
   }
 

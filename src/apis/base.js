@@ -1,10 +1,5 @@
-import request from 'request-promise-native';
-
-import CreateSharedContext from './data';
-
-export default class Api {
+export default class Base {
   constructor(context) {
-    this._request = request;
-    this.data = CreateSharedContext(context);
+    this.context = context;
   }
 }

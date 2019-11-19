@@ -1,11 +1,11 @@
 
-import Api from '../../base';
-import { filterAndLimit } from '../../../utils';
+import Base from '../../base';
+import { filterAndLimit, errors } from '../../../utils';
 
-export default class ProductsApi extends Api {
+export default class Products extends Base {
   async search(query, options = {}) {
     const { limit, type } = options;
-    const { proxy, headers } = this.data;
+    const { headers, proxy, request } = this.context;
 
     let url = `https://stockx.com/api/browse?&_search=${query}`;
 
@@ -14,7 +14,7 @@ export default class ProductsApi extends Api {
     }
 
     try {
-      const res = await this._request(url, {
+      const res = await request(url, {
         headers,
         json: true,
         proxy,
@@ -34,27 +34,38 @@ export default class ProductsApi extends Api {
         return { title, retailPrice, releaseDate, styleId, productUuid, image, urlKey, market };
       });
     } catch (error) {
-      const err = new Error('Failed to complete search!');
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'search products');
     }
   }
 
   async details(product) {
     try {
-      const { currency, headers } = this.data;
+      const { currency, headers, request } = this.context;
       const { pathname } = new URL(product, 'https://stockx.com');
+      
+      if (!pathname) {
+        const err = new Error('Invalid product path!');
+        err.status = 404;
+        throw err;
+      }
+      
       let url = `https://stockx.com/api/products${pathname}?includes=market&currency=${currency}`;
 
-      const res = await this._request(url, {
+      const res = await request(url, {
         headers,
         json: true,
         resolveWithFullResponse: true,
         simple: false,
       });
 
-      const { Product } = res.body;
+      const { statusCode, body } = res;
+      if (!statusCode || (statusCode && statusCode !== 200)) {
+        const err = new Error('Invalid response code!');
+        err.status = statusCode || 404;
+        throw err;
+      }
+
+      const { Product } = body;
       const { children, title, urlKey, styleId, uuid } = Product;
 
       const variants = [];
@@ -72,10 +83,7 @@ export default class ProductsApi extends Api {
       };
 
     } catch (error) {
-      const err = new Error('Failed to fetch product details!');
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'fetch product details');
     }
   }
 };

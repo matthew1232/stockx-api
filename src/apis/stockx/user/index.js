@@ -1,14 +1,16 @@
-import Api from '../../base';
+import Base from '../../base';
 
+// helper methods (prevents exposure of these functions)
 import { getState, submitCredentials, checkStatus } from './helpers';
+import { errors } from '../../../utils';
 
-export default class UserApi extends Api {
+export default class User extends Base {
   // todo:
   async logout(options = {}) {}
 
   async login(options = {}) {
     const { password, username } = options;
-    const { headers, jar, proxy } = this.data;
+    const { headers, jar, proxy, request } = this.context;
 
     try {
       if (!username || !password) {
@@ -19,7 +21,7 @@ export default class UserApi extends Api {
         headers,
         jar,
         proxy,
-        request: this._request,
+        request,
       });
 
       const { wa, wresult, wctx } = await submitCredentials({
@@ -28,16 +30,15 @@ export default class UserApi extends Api {
         jar,
         password,
         proxy,
-        request: this._request,
+        request,
         state,
         username,
       });
 
       const isLoggedIn = await checkStatus({
-        headers,
         jar,
         proxy, 
-        request: this._request,
+        request,
         wa,
         wctx,
         wresult,
@@ -56,15 +57,12 @@ export default class UserApi extends Api {
         throw error;
       }
       const [bearer] = token.toString().split('token=')[1].split(';');
-      this.data.setBearer(bearer);
-      this.data.setIsLoggedIn(isLoggedIn);
+      this.context.setBearer(bearer);
+      this.context.setIsLoggedIn(isLoggedIn);
       return isLoggedIn;
 
     } catch (error) {
-      const err = new Error(error.message || 'Unable to login!');
-      err.stack = error.stack || {};
-      err.status = error.status || 404;
-      throw err;
+      return errors(error, 'login');
     }
   }
 }

@@ -51,6 +51,8 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "dom-parser": "^0.1.6",
+    "html-dom-parser": "^0.2.3",
     "moment": "^2.24.0",
     "request": "2.88.0",
     "request-promise-native": "1.0.8"

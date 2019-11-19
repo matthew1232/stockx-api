@@ -33,7 +33,7 @@ yarn add stockx-api
 
 ## Basic use
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new StockX();
 
@@ -88,7 +88,7 @@ stockx-api accepts a few parameters in the class options
 
 For example:
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new StockX({
     proxy: '127.0.0.1:8888',
@@ -107,7 +107,7 @@ There is also an optional `options` parameter, in which you can pass in:
 
 For example:
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -128,7 +128,7 @@ You can scrape the variants and basic product information using the `details` me
 
 For example:
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -155,7 +155,7 @@ You can login to StockX by using the `login` method. This takes an Object parame
 
 For example:
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -188,7 +188,7 @@ An Object:
 
 For example: 
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -229,7 +229,7 @@ An Object:
 
 For example: 
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -277,7 +277,7 @@ An Object:
 
 For example: 
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -318,7 +318,7 @@ An Object:
 
 For example: 
 ```js
-import { StockX } from 'stockx-api';
+import StockX from 'stockx-api';
 
 const stockXController = new Stockx();
 
@@ -334,7 +334,7 @@ const stockXController = new Stockx();
         // Pull product details in order to place the ask
         const product = await stockXController.products.details('https://stockx.com/adidas-yeezy-boost-700-magnet');
 
-        console.log('Placing an bid for ' + product.title);
+        console.log('Placing a bid for ' + product.title);
 
         // Place a bid on that product
         const bid = await stockXControler.bids.place(product, {
@@ -373,5 +373,6 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
 ## Acknowledgements
 
 * **matthew#1232** - *Initial StockX API* - [matthew1232](https://github.com/matthew1232)
+* **orion#0001** - *ES6 Rewrite* - [walmat](https://github.com/walmat)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.

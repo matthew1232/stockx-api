@@ -5,7 +5,7 @@ const { StockX } = require('../dist');
 const { username, password } = process.env;
 
 const stockXController = new StockX();
-// if you're using charlesproxy, make sure it's launched and use the controller belo!
+// if you're using charlesproxy, make sure it's launched and use the controller below!
 // const stockXController = new StockX({ proxy: '127.0.0.1:8888' });
 
 

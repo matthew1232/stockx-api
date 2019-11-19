@@ -1,11 +1,10 @@
 {
   "name": "stockx-api",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "Unofficial StockX API",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel --no-comments -d dist src/",
-    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Matthew Mulfinger",
@@ -18,7 +17,9 @@
     "StockX",
     "sneakers",
     "bots",
-    "axios"
+    "request",
+    "promise",
+    "es6"
   ],
   "devDependencies": {
     "@babel/cli": "^7.2.0",

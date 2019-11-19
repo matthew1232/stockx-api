@@ -65,7 +65,7 @@ export default class Asks extends Base {
 
   async place(product, options = {}) {
     const { amount, size } = options;
-    const { bearer, currency, headers, request } = this.context;
+    const { bearer, currency, headers, jar, proxy, request } = this.context;
     const expiresAt = moment().add(30, 'days').utc().format();
 
     try {
@@ -97,6 +97,7 @@ export default class Asks extends Base {
           authorization: `Bearer ${bearer}`,
           'content-type': 'application/json',
         },
+        jar,
         json: {
           PortfolioItem: {
             localAmount: amount,
@@ -106,6 +107,9 @@ export default class Asks extends Base {
           },
         },
         method: 'POST',
+        proxy,
+        resolveWithFullResponse: true,
+        simple: false,
       });
 
       const { statusCode, body } = res;

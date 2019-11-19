@@ -360,7 +360,7 @@ const stockXController = new Stockx();
 ------
 
 ## Contributing
-Please read [CONTRIBUTING.md]() for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ------
 
@@ -369,7 +369,7 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
 * **matthew#1232** - *Initial StockX API* - [matthew1232](https://github.com/matthew1232)
 * **orion#0001** - *ES6 Rewrite* - [walmat](https://github.com/walmat)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/matthew1232/stockx-api/contributors) who participated in this project.
 
 ------
 

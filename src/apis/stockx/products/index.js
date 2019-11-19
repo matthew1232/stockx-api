@@ -6,12 +6,7 @@ export default class ProductsApi extends Api {
   async search(query, options = {}) {
     const { limit, type } = options;
     const { proxy, headers } = this.data;
-
-    let url = `https://stockx.com/api/browse?&_search=${query}`;
-
-    if (type) {
-      url += `&dataType=${type}`;
-    }
+    const url = 'https://stockx.com/api/browse?&_search=${query}?dataType=product';
 
     try {
       const res = await this._request(url, {
@@ -37,16 +32,18 @@ export default class ProductsApi extends Api {
       const err = new Error('Failed to complete search!');
       err.stack = error.stack || {};
       err.status = error.status || 404;
+      err.body = error.body || '';
       throw err;
     }
   }
 
   async details(product) {
     try {
+      const productURL = typeof product == 'string' ? product : product.urlKey;
       const { currency, headers } = this.data;
-      const { pathname } = new URL(product, 'https://stockx.com');
-      let url = `https://stockx.com/api/products${pathname}?includes=market&currency=${currency}`;
-
+      const { pathname } = new URL(productURL, 'https://stockx.com');
+      const url = `https://stockx.com/api/products${pathname}?includes=market&currency=${currency}`;
+      
       const res = await this._request(url, {
         headers,
         json: true,
@@ -75,6 +72,7 @@ export default class ProductsApi extends Api {
       const err = new Error('Failed to fetch product details!');
       err.stack = error.stack || {};
       err.status = error.status || 404;
+      err.body = error.body || '';
       throw err;
     }
   }

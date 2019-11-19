@@ -1,7 +1,7 @@
 {
   "name": "stockx-api",
   "version": "1.0.4",
-  "description": "Unofficial StockX API",
+  "description": "Unofficial StockX Public API",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel --no-comments -d dist src/",

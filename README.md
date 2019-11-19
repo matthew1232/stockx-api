@@ -359,12 +359,6 @@ const stockXController = new Stockx();
 
 ------
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-------
-
 ## Contributing
 Please read [CONTRIBUTING.md]() for details on our code of conduct, and the process for submitting pull requests to us.
 
@@ -376,3 +370,9 @@ Please read [CONTRIBUTING.md]() for details on our code of conduct, and the proc
 * **orion#0001** - *ES6 Rewrite* - [walmat](https://github.com/walmat)
 
 See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+
+------
+
+## License
+
+MIT

@@ -1,6 +1,7 @@
 import parse from 'html-dom-parser';
 
 import { decodeHtmlEntity } from '../../../utils';
+import { checkLoginStatus, checkStatus } from '../../../utils/errors';
 
 export const getState = async ({ request, headers, jar, proxy }) => {
   try {
@@ -73,13 +74,9 @@ export const submitCredentials = async ({ request, headers, jar, proxy, state, c
       simple: false,
     });
 
-    const { statusCode, body } = res;
+    const { body } = res;
 
-    if (!statusCode || (statusCode && statusCode === 401)) {
-      const err = new Error('Invalid email and/or password!');
-      err.status = statusCode || 404;
-      throw err;
-    }
+    checkLoginStatus(res);
 
     let wa;
     let wctx;
@@ -124,9 +121,10 @@ export const submitCredentials = async ({ request, headers, jar, proxy, state, c
   }
 }
 
-export const checkStatus = async ({ request, jar, proxy, wa, wresult, wctx }) => {
+export const submitCallback = async ({ request, jar, proxy, wa, wresult, wctx }) => {
+  let res;
   try {
-     const res = await request(`https://accounts.stockx.com/login/callback`, {
+    res = await request(`https://accounts.stockx.com/login/callback`, {
         body: encodeURI(`wa=${wa}&wresult=${wresult}&wctx=${wctx}`),  
         followAllRedirects: true,
         followRedirect: true,  
@@ -146,19 +144,18 @@ export const checkStatus = async ({ request, jar, proxy, wa, wresult, wctx }) =>
         method: 'POST',
         proxy,
         resolveWithFullResponse: true,
-        simple: false,
+        simple: false
     });
-
-    const { statusCode } = res;
-    if (!statusCode || (statusCode && statusCode !== 200)) {
-      const err = new Error('Invalid response code!');
-      err.status = statusCode || 400;
-      throw err;
-    }
-
-    return true;
-  } catch (error) {
-    // bubble this up...
-    throw error;
   }
-}
+  catch(e){
+    const { status = 404, body = '' } = e;
+    const error = new Error(`Error requesting: ${e.message}`);
+
+    error.status = status;
+    error.body = body;
+  }
+
+  checkStatus(res);
+
+  return true;
+};

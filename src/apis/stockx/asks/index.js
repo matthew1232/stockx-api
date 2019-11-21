@@ -136,7 +136,7 @@ export default class Asks extends Base {
       jar, 
       proxy,
       json: {
-        "chain_id": askID.toString(),
+        "chain_id": chainId.toString(),
         "notes": "Customer Removed Ask"
       },
       simple: false,

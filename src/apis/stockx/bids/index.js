@@ -114,7 +114,7 @@ export default class Bids extends Base {
 
   // TODO!
   async remove(bid = {}) {
-    const bidID = bid.chainId;
+    const { chainId } = bid;
     const { bearer, headers, jar, proxy, request } = this.context;
 
     if (!bidID){

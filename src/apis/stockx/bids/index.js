@@ -117,7 +117,7 @@ export default class Bids extends Base {
     const { chainId } = bid;
     const { bearer, headers, jar, proxy, request } = this.context;
 
-    if (!bidID){
+    if (!chainId){
       const err = new Error("No bid ID found!");
       err.status = 404;
       throw err;

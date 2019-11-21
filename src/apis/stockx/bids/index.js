@@ -135,7 +135,7 @@ export default class Bids extends Base {
       jar, 
       proxy,
       json: {
-        "chain_id": bidID.toString(),
+        "chain_id": chainId.toString(),
         "notes": "Customer Removed Bid"
       },
       simple: false,

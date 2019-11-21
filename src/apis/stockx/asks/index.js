@@ -1,8 +1,7 @@
 import moment from 'moment';
 
 import Base from '../../base';
-import { randomInclusive } from '../../../utils/index';
-import { checkStatus } from '../../../utils/errors';
+import { randomInclusive, checkStatus } from '../../../utils';
 
 export default class Asks extends Base {
   // TODO!

@@ -115,7 +115,7 @@ export default class Asks extends Base {
   }
 
   async remove(bid = {}) {
-    const askID = bid.chainId;
+    const { chainId } = bid;
     const { bearer, headers, jar, proxy, request } = this.context;
 
     if (!askID){

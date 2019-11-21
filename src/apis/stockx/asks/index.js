@@ -124,7 +124,7 @@ export default class Asks extends Base {
       throw err;
     };
 
-    const URL = `https://stockx.com/api/portfolio/${askID}`;
+    const URL = `https://stockx.com/api/portfolio/${chainId}`;
 
     const res = await request(URL, {
       headers: {

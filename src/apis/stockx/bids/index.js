@@ -123,7 +123,7 @@ export default class Bids extends Base {
       throw err;
     };
 
-    const URL = `https://stockx.com/api/portfolio/${bidId}`;
+    const URL = `https://stockx.com/api/portfolio/${chainId}`;
 
     const res = await request(URL, {
       headers: {

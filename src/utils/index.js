@@ -1,11 +1,11 @@
 import filterAndLimit from './filterAndLimit';
-import errors from './errors';
+import { checkStatus, checkLoginStatus } from './errors';
 
 const split = (input = '', delimiter) => input.split(delimiter);
 
-const format = input => {
+const formatProxy = proxy => {
   try {
-    const parts = split(input, ':');
+    const parts = split(proxy, ':');
     if (!parts || !parts.length) {
       return null;
     }
@@ -41,4 +41,14 @@ const currencies = {
   USD: 'USD',
 }
 
-export { format, split, errors, currencies, filterAndLimit, randomInclusive, decodeHtmlEntity };
+export { 
+  format, 
+  formatProxy, 
+  errors, 
+  currencies, 
+  filterAndLimit, 
+  randomInclusive, 
+  decodeHtmlEntity,
+  checkLoginStatus,
+  checkStatus
+};

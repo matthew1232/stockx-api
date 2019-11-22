@@ -79,6 +79,7 @@ export default class Asks extends Base {
     if (!desiredSize || (desiredSize && !desiredSize.uuid)) {
       const error = new Error('Size not found!');
       error.status = 404;
+      error.body = '';
       throw error;
     }
 
@@ -120,6 +121,7 @@ export default class Asks extends Base {
     if (!chainId){
       const err = new Error("No bid ID found!");
       err.status = 404;
+      err.body = '';
       throw err;
     };
 

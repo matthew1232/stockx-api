@@ -16,12 +16,14 @@ export default class Bids extends Base {
     if (!amount || !skuUuid || !chainId) {
       const error = new Error('Invalid amount product id, and/or ask id!');
       error.status = 404;
+      error.body = '';
       throw error;
     }
 
     if (!bearer) {
       const error = new Error('Please login first!');
       error.status = 401;
+      error.body = '';
       throw error;
     }
 
@@ -49,10 +51,10 @@ export default class Bids extends Base {
 
     checkStatus(res);
 
-    const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid } } = body;
-    
-    return { chainId, skuUuid };
+    const body = JSON.parse(res.body);
+    const { PortfolioItem } = body;
+
+    return PortfolioItem;
   }
 
   async place(product, options = {}) {
@@ -63,12 +65,14 @@ export default class Bids extends Base {
     if (!amount || !size || !product) {
       const error = new Error('Invalid product, amount, and/or size!');
       error.status = 404;
+      error.body = '';
       throw error;
     }
 
     if (!bearer) {
       const error = new Error('Please login first!');
       error.status = 401;
+      error.body = '';
       throw error;
     }
 
@@ -77,6 +81,7 @@ export default class Bids extends Base {
     if (!desiredSize || (desiredSize && !desiredSize.uuid)) {
       const error = new Error('Size not found!');
       error.status = 404;
+      error.body = '';
       throw error;
     }
 
@@ -105,10 +110,10 @@ export default class Bids extends Base {
 
     checkStatus(res);
 
-    const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid } } = body;
+    const body = JSON.parse(res.body);
+    const { PortfolioItem } = body;
 
-    return { chainId, skuUuid };
+    return PortfolioItem;
   }
 
   // TODO!
@@ -143,9 +148,9 @@ export default class Bids extends Base {
 
     checkStatus(res);
   
-    const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid } } = body;
+    const body = JSON.parse(res.body);
+    const { PortfolioItem } = body;
 
-    return { chainId, skuUuid };
+    return PortfolioItem;
   }
 }

@@ -2,7 +2,6 @@ import moment from 'moment';
 
 import Base from '../../base';
 import { randomInclusive, checkStatus } from '../../../utils/index';
-import { checkStatus } from '../../../utils';
 
 export default class Bids extends Base {
   // TODO!

@@ -52,7 +52,7 @@ export default class Asks extends Base {
     checkStatus(res);
 
     const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid }} = body;
+    ({ PortfolioItem: { chainId, skuUuid }} = body)
     
     return { chainId, skuUuid };
   }
@@ -109,7 +109,7 @@ export default class Asks extends Base {
     checkStatus(res);
 
     const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid }} = body;
+    ({ PortfolioItem: { chainId, skuUuid }} = body)
 
     return { chainId, skuUuid };
   }
@@ -147,7 +147,7 @@ export default class Asks extends Base {
     checkStatus(res);
   
     const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid } } = body;
+    ({ PortfolioItem: { chainId, skuUuid }} = body)
 
     return { chainId, skuUuid };
   }

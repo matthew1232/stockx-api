@@ -51,10 +51,10 @@ export default class Asks extends Base {
 
     checkStatus(res);
 
-    const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid }} = body;
-    
-    return { chainId, skuUuid };
+    const body = JSON.parse(res.body);
+    const { PortfolioItem } = body;
+
+    return PortfolioItem;
   }
 
   async place(product, options = {}) {
@@ -65,6 +65,7 @@ export default class Asks extends Base {
     if (!amount || !size || !product) {
       const error = new Error('Invalid product, amount, and/or size!');
       error.status = 404;
+      error.body = '';
       throw error;
     }
 
@@ -108,10 +109,10 @@ export default class Asks extends Base {
 
     checkStatus(res);
 
-    const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid }} = body;
+    const body = JSON.parse(res.body);
+    const { PortfolioItem } = body;
 
-    return { chainId, skuUuid };
+    return PortfolioItem;
   }
 
   async remove(bid = {}) {
@@ -146,9 +147,9 @@ export default class Asks extends Base {
 
     checkStatus(res);
   
-    const { body } = res;
-    const { PortfolioItem: { chainId, skuUuid } } = body;
+    const body = JSON.parse(res.body);
+    const { PortfolioItem } = body;
 
-    return { chainId, skuUuid };
+    return PortfolioItem;
   }
 }

@@ -42,9 +42,7 @@ const currencies = {
 }
 
 export { 
-  format, 
   formatProxy, 
-  errors, 
   currencies, 
   filterAndLimit, 
   randomInclusive, 

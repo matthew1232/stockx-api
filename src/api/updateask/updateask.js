@@ -16,7 +16,7 @@ module.exports = async (bearer, options) => {
             'content-type': 'application/json',
             'appos': 'web',
             'x-requested-with': 'XMLHttpRequest',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
             'appversion': '0.1',
             'accept': '*/*',
             'sec-fetch-site': 'same-origin',

@@ -12,7 +12,7 @@ module.exports = async (clientID, options) => {
             'sec-fetch-mode': 'cors',
             'auth0-client': clientID,
             'origin': 'https://accounts.stockx.com',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.120 Safari/537.36',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
             'content-type': 'application/json',
             'sec-fetch-site': 'same-origin'
         },

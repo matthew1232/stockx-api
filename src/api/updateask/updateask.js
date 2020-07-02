@@ -2,7 +2,7 @@ const request = require('request-promise');
 const moment = require('moment');
 
 module.exports = async (bearer, options) => {
-    const { amount, variantID, askID, currency, cookieJar, proxy }  = options;
+    const { amount, variantID, askID, currency, cookieJar, proxy, userAgent }  = options;
 
     const expiresAt = moment().add(30, 'days').utc().format();
     const res = await request({
@@ -16,7 +16,7 @@ module.exports = async (bearer, options) => {
             'content-type': 'application/json',
             'appos': 'web',
             'x-requested-with': 'XMLHttpRequest',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
+            'user-agent': userAgent,
             'appversion': '0.1',
             'accept': '*/*',
             'sec-fetch-site': 'same-origin',

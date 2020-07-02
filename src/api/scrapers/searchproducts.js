@@ -1,7 +1,7 @@
 const request = require('request-promise');
 
 module.exports = async (query, options = {}) => {
-    const { limit, dataType, proxy } = options;
+    const { limit, dataType, proxy, userAgent } = options;
     const uri = dataType == undefined ? `https://stockx.com/api/browse?&_search=${query}` : `https://stockx.com/api/browse?&_search=${query}&dataType=${dataType}`;
 
     const requestOptions = {
@@ -12,7 +12,7 @@ module.exports = async (query, options = {}) => {
             'authorization': '',
             'x-requested-with': 'XMLHttpRequest',
             'appos': 'web',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
+            'user-agent': userAgent,
             'accept': '*/*',
             'authority': 'stockx.com',
             'sec-fetch-site': 'same-origin',

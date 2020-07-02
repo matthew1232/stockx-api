@@ -16,12 +16,13 @@ module.exports = class stockx {
      * @param options.currency - The currency to make requests in 
      */
     constructor(options = {}){
-        const { proxy, currency } = options;
+        const { proxy, currency, userAgent } = options;
 
         //Configure options
         this.currency = 'USD';
         this.cookieJar = request.jar();
         this.loggedIn = false;
+        this.userAgent = userAgent !== undefined ? userAgent : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36';
 
         this.currency = currency == undefined ? 'USD' : currency;
         this.proxy = proxy == undefined || proxy.trim() == '' ? undefined : formatProxy(proxy);
@@ -40,7 +41,8 @@ module.exports = class stockx {
         const products = await searchProducts(query, {
             dataType: 'product', 
             limit, 
-            proxy: this.proxy
+            proxy: this.proxy,
+            userAgent: this.userAgent
         });
 
         return products;
@@ -54,7 +56,8 @@ module.exports = class stockx {
         //Fetch products and return them
         const products = await fetchProductDetails(product, {
             currency: this.currency, 
-            proxy: this.proxy
+            proxy: this.proxy,
+            userAgent: this.userAgent
         });
 
         return products;
@@ -74,7 +77,8 @@ module.exports = class stockx {
             user,
             password, 
             proxy: this.proxy,
-            cookieJar: this.cookieJar
+            cookieJar: this.cookieJar,
+            userAgent: this.userAgent
         });
 
         //Verify a token was created
@@ -119,7 +123,8 @@ module.exports = class stockx {
             variantID: size.uuid, 
             currency: this.currency, 
             cookieJar: this.cookieJar, 
-            proxy: this.proxy
+            proxy: this.proxy,
+            userAgent: this.userAgent
         });
 
         return response;
@@ -158,7 +163,8 @@ module.exports = class stockx {
             variantID: size.uuid, 
             currency: this.currency, 
             cookieJar: this.cookieJar, 
-            proxy: this.proxy
+            proxy: this.proxy,
+            userAgent: this.userAgent
         });
 
         return response;
@@ -192,7 +198,8 @@ module.exports = class stockx {
             askID: ask.id, 
             currency: this.currency, 
             cookieJar: this.cookieJar, 
-            proxy: this.proxy
+            proxy: this.proxy,
+            userAgent: this.userAgent
         });
 
         return response;
@@ -226,7 +233,8 @@ module.exports = class stockx {
             bidID: bid.id, 
             currency: this.currency, 
             cookieJar: this.cookieJar, 
-            proxy: this.proxy
+            proxy: this.proxy,
+            userAgent: this.userAgent
         });
 
         return response;

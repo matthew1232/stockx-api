@@ -1,10 +1,11 @@
 const login = require('./index');
 
 module.exports = async (options) => {
-    const { user, password, cookieJar, proxy } = options;
+    const { user, password, cookieJar, proxy, userAgent } = options;
     const stateData = await login.fetchState({
         cookieJar, 
-        proxy
+        proxy,
+        userAgent
     });
 
     const { wa, wresult, wctx } = await login.submitCredentials(stateData.clientID, {
@@ -12,7 +13,8 @@ module.exports = async (options) => {
         user, 
         password, 
         cookieJar, 
-        proxy
+        proxy,
+        userAgent
     });
 
     await login.submitCallback({
@@ -20,6 +22,7 @@ module.exports = async (options) => {
         wresult, 
         wctx, 
         cookieJar,
-        proxy
+        proxy,
+        userAgent
     });
 };

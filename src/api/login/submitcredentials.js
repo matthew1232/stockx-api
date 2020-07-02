@@ -2,7 +2,7 @@ const request = require('request-promise');
 const cheerio = require('cheerio');
 
 module.exports = async (clientID, options) => {
-    const { state, user, password, cookieJar, proxy } = options;
+    const { state, user, password, cookieJar, proxy, userAgent } = options;
     //Submit credentials
     const reqOptions = {
         uri: 'https://accounts.stockx.com/usernamepassword/login',
@@ -12,7 +12,7 @@ module.exports = async (clientID, options) => {
             'sec-fetch-mode': 'cors',
             'auth0-client': clientID,
             'origin': 'https://accounts.stockx.com',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
+            'user-agent': userAgent,
             'content-type': 'application/json',
             'sec-fetch-site': 'same-origin'
         },

@@ -1,6 +1,6 @@
 {
   "name": "stockx-api",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "communicate with the unofficial StockX API",
   "main": "index.js",
   "scripts": {

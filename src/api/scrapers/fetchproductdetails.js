@@ -1,7 +1,7 @@
 const request = require('request-promise');
 
 module.exports = async (product, options) => {
-    const { currency, proxy } = options;
+    const { currency, proxy, userAgent } = options;
     const variantArray = [];
     let webURL;
     
@@ -19,7 +19,7 @@ module.exports = async (product, options) => {
             'authorization': '',
             'x-requested-with': 'XMLHttpRequest',
             'appos': 'web',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36',
+            'user-agent': userAgent,
             'accept': '*/*',
             'authority': 'stockx.com',
             'sec-fetch-site': 'same-origin',

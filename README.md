@@ -2,7 +2,7 @@
 ![version](https://img.shields.io/npm/v/stockx-api "Version")
 ![npm](https://img.shields.io/npm/dt/stockx-api.svg "Total Downloads")
 
-Easy access to StockX's unofficial API through object oriented promises. If you have any issues, you can contact me through discord at `matthew#1232`. Feel free to use this however you want, as it is under the MIT license. I would love to see what projects you guys can come up with using this. If you'd like to contribute to this library, fork the repo, make your changes, and submit a pull request.
+Easy access to StockX's unofficial API through object oriented promises. If you have any issues, you can contact me through discord at `matthew#5706`. Feel free to use this however you want, as it is under the MIT license. I would love to see what projects you guys can come up with using this. If you'd like to contribute to this library, fork the repo, make your changes, and submit a pull request.
 
 ## Installation 
 ```
@@ -72,13 +72,15 @@ const stockX = new stockxAPI();
 stockx-api accepts a few parameters in the class options
 * proxy - sets the proxy to be used with all requests being made (ip:port:user:pass)
 * currency - sets the currency to be used when placing asks/bids
+* userAgent - sets the user agent for all requests
 
 For example:
 ```js
 const stockxAPI = require('stockx-api');
 const stockX = new stockxAPI({
     proxy: 'proxyhere',
-    currency: 'USD'
+    currency: 'USD',
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Mobile/15E148 Safari/604.1'
 });
 ```
 

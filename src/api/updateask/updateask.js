@@ -37,8 +37,14 @@ module.exports = async (bearer, options) => {
         proxy: proxy
     });
 
-    if (res.statusCode != 200) throw new Error(`Status code error: ${res.statusCode} - Response: ${res.body}`);
-    
+    if (res.statusCode !== 200){
+        const e = new Error(`Status code error: ${res.statusCode}`);
+        e.statusCode = res.statusCode;
+        e.body = res.body;
+
+        throw e;
+    };
+
     return {
         id: res.body.PortfolioItem.chainId,
         response: res.body

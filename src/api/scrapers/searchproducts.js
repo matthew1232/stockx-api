@@ -24,6 +24,15 @@ module.exports = async (query, options = {}) => {
     };
 
     const res = await request(requestOptions);
+
+    if (res.statusCode !== 200){
+        const e = new Error(`Status code error: ${res.statusCode}`);
+        e.statusCode = res.statusCode;
+        e.body = res.body;
+
+        throw e;
+    };
+
     const body = JSON.parse(res.body);
 
     const { Products } = body;

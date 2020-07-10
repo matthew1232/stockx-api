@@ -38,7 +38,13 @@ module.exports = (bearer, options) => new Promise(async (resolve, reject) => {
     })
     .catch(err => reject(err));
 
-    if (res.statusCode != 200) return reject(new Error(`Status code error: ${res.statusCode} - Response: ${res.body}`))
+    if (res.statusCode !== 200){
+        const e = new Error(`Status code error: ${res.statusCode}`);
+        e.statusCode = res.statusCode;
+        e.body = res.body;
+
+        throw e;
+    };
     
     resolve({
         id: res.body.PortfolioItem.chainId,

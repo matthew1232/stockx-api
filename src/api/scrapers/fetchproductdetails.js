@@ -32,6 +32,14 @@ module.exports = async (product, options) => {
 
     const res = await request(requestOptions);
 
+    if (res.statusCode !== 200){
+        const e = new Error(`Status code error: ${res.statusCode}`);
+        e.statusCode = res.statusCode;
+        e.body = res.body;
+
+        throw e;
+    };
+
     const body = JSON.parse(res.body);    
     const variants = body.Product.children;
 

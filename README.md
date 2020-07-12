@@ -4,6 +4,8 @@
 
 Easy access to StockX's unofficial API through object oriented promises. If you have any issues, you can contact me through discord at `matthew#5706`. Feel free to use this however you want, as it is under the MIT license. I would love to see what projects you guys can come up with using this. If you'd like to contribute to this library, fork the repo, make your changes, and submit a pull request.
 
+As of 1.0.7, I have changed the `searchProducts`, `newSearchProducts`, and `fetchProductDetails` methods to http2 using [got](https://github.com/sindresorhus/got) due to PerimeterX changes. Please report any issues you have have with PerimeterX (403 errors). Because of this, **proxy support is currently down for these three methods**, as the http2 proxying in [got](https://github.com/sindresorhus/got) [seems to be bugged](https://github.com/sindresorhus/got/issues/1356). If you need to use a proxy for these three methods, please use a previous version (1.0.6 and under).
+
 ## Installation 
 ```
 npm install stockx-api
@@ -15,8 +17,8 @@ yarn add stockx-api
 
 # Features
 * [x] Account login
-* [x] Placing asks
-* [x] Placing bids
+* [x] Placing/updating/deleting asks
+* [x] Placing/updating/deleting bids
 * [x] Product searching
 * [x] Variant scraping
 * [ ] Product monitoring
@@ -40,7 +42,7 @@ const stockX = new stockxAPI();
         console.log('Successfully logged in!');
 
         //Returns an array of products
-        const productList = await stockX.searchProducts('yeezy');
+        const productList = await stockX.newSearchProducts('yeezy');
         
         //Fetch variants and product details of the first product
         const product = await stockX.fetchProductDetails(productList[0]);
@@ -84,7 +86,26 @@ const stockX = new stockxAPI({
 });
 ```
 
-## Searching for products
+## Searching for products (new version - recommended)
+You can directly use Stockx's updated search API by using the `newSearchProducts` method. This takes in one parameter - the search query.
+There is also an optional `options` parameter, in which you can pass in:
+* limit - limits the amount of search results returned.
+
+Keep in mind that if you have original code using old search method, you will need to adapt to the slightly different response this API provides. The benefit of using this new method is that there is no PerimeterX on the domain used to my knowledge.
+
+For example:
+```js
+const stockxAPI = require('stockx-api');
+const stockX = new stockxAPI();
+
+stockX.newSearchProducts('yeezy', {
+    limit: 5
+})
+.then(products => console.log(products))
+.catch(err => console.log(`Error searching: ${err.message}`));
+```
+
+## Searching for products (old version)
 You can directly use Stockx's search API by using the `searchProducts` method. This takes in one parameter - the search query.
 There is also an optional `options` parameter, in which you can pass in:
 * limit - limits the amount of search results returned.
@@ -237,10 +258,10 @@ const stockX = new stockxAPI();
     //Pull product details to place the ask
     const product = await stockX.fetchProductDetails('https://stockx.com/adidas-yeezy-boost-700-magnet');
 
-    console.log('Placing a bid for ' + product.name);
+    console.log('Placing an ask for ' + product.name);
 
     //Place an ask on that product
-    const ask = await stockX.placeBid(product, {
+    const ask = await stockX.placeAsk(product, {
         amount: 100000, 
         size: '9.5'
     });
@@ -298,5 +319,85 @@ const stockX = new stockxAPI();
     });
     
     console.log('Updated bid!');
+})();
+```
+
+## Deleting previously made asks
+You can delete a previously placed ask by using the `deleteAsk` method. This takes in 1 parameter.
+* ask - the ask to update
+
+For example: 
+```js
+const stockxAPI = require('stockx-api');
+const stockX = new stockxAPI();
+
+(async () => {
+    console.log('Logging in...');
+
+    //Logs in before placing ask
+    await stockX.login({
+        user: 'accountemailhere', 
+        password: 'accountpassword'
+    });
+
+    console.log('Successfully logged in!');
+    
+    //Pull product details to place the ask
+    const product = await stockX.fetchProductDetails('https://stockx.com/adidas-yeezy-boost-700-magnet');
+
+    console.log('Placing an ask for ' + product.name);
+
+    //Place an ask on that product
+    const ask = await stockX.placeAsk(product, {
+        amount: 100000, 
+        size: '9.5'
+    });
+    
+    console.log(`Successfully placed an ask for $100000 [${product.name}]`);
+
+    //Delete previously placed ask
+    await stockX.deleteAsk(ask);
+    
+    console.log('Deleted ask!');
+})();
+```
+
+## Deleting previously made bids
+You can delete a previously placed bid by using the `deleteBid` method. This takes in 1 parameter.
+* bid - the bid to update
+
+For example: 
+```js
+const stockxAPI = require('stockx-api');
+const stockX = new stockxAPI();
+
+(async () => {
+    console.log('Logging in...');
+
+    //Logs in before placing bid
+    await stockX.login({
+        user: 'accountemailhere', 
+        password: 'accountpassword'
+    });
+
+    console.log('Successfully logged in!');
+    
+    //Pull product details to place the bid
+    const product = await stockX.fetchProductDetails('https://stockx.com/adidas-yeezy-boost-700-magnet');
+
+    console.log('Placing an ask for ' + product.name);
+
+    //Place an ask on that product
+    const bid = await stockX.placeBid(product, {
+        amount: 100, 
+        size: '9.5'
+    });
+    
+    console.log(`Successfully placed a bid for $100 [${product.name}]`);
+
+    //Delete previously placed bid
+    await stockX.deleteBid(bid);
+    
+    console.log('Deleted bid!');
 })();
 ```

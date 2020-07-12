@@ -1,10 +1,10 @@
 {
   "name": "stockx-api",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "communicate with the unofficial StockX API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --timeout 50000"
   },
   "author": "Matthew Mulfinger",
   "license": "MIT",
@@ -21,8 +21,15 @@
   ],
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "got": "^11.5.0",
+    "http2-wrapper": "^1.0.0-beta.5.2",
     "moment": "^2.24.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^8.0.1"
   }
 }

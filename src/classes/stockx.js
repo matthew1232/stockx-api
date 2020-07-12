@@ -1,14 +1,17 @@
 const request = require('request-promise');
 const searchProducts = require('../api/scrapers/searchproducts');
 const fetchProductDetails = require('../api/scrapers/fetchproductdetails');
+const newSearchProducts = require('../api/scrapers/newsearchproducts');
 const login = require('../api/login/login');
 const placeBid = require('../api/placebid/index');
 const placeAsk = require('../api/placeask/index');
 const updateAsk = require('../api/updateask/index');
+const deleteAsk = require('../api/deleteask/index');
 const updateBid = require('../api/updatebid/index');
+const deleteBid = require('../api/deletebid/index');
 const formatProxy = require('../utils/formatproxy');
 
-module.exports = class stockx {
+module.exports = class StockX {
     /**
      * 
      * @param {Object=} options
@@ -39,7 +42,25 @@ module.exports = class stockx {
         const { limit } = options;
 
         const products = await searchProducts(query, {
-            dataType: 'product', 
+            limit, 
+            proxy: this.proxy,
+            userAgent: this.userAgent
+        });
+
+        return products;
+    };
+
+    /**
+     * 
+     * @param {string} query - The query string to search for 
+     * @param {Object=} options
+     * @param {Number=} options.limit - The limit on how many products to return at max 
+    */
+    async newSearchProducts(query, options = {}){
+        //Search products and return them
+        const { limit } = options;
+
+        const products = await newSearchProducts(query, {
             limit, 
             proxy: this.proxy,
             userAgent: this.userAgent
@@ -104,7 +125,7 @@ module.exports = class stockx {
 
         //Verify fields passed in by user
         if (!this.loggedIn) throw new Error("You must be logged in before placing a bid!");
-        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
+        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your parameters are correctly formatted.");
         else if (requestedSize == undefined) throw new Error("Please specify a size to bid on!");
         else if (product == undefined) throw new Error("A product must be specified!");
         else if (typeof product == 'string') throw new Error("The product passed in must an object. Use fetchProductDetails() to get the details first.");
@@ -144,7 +165,7 @@ module.exports = class stockx {
 
         //Verify fields passed in by user
         if (!this.loggedIn) throw new Error("You must be logged in before placing an ask!");
-        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
+        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your parameters are correctly formatted.");
         else if (requestedSize == undefined) throw new Error("Please specify a size to place an ask on!");
         else if (product == undefined) throw new Error("A product must be specified!");
         else if (typeof product == 'string') throw new Error("The product passed in must an object. Use fetchProductDetails() to get the details first.");
@@ -182,8 +203,8 @@ module.exports = class stockx {
 
         //Verify fields passed in by user
         if (!this.loggedIn) throw new Error("You must be logged in before placing an ask!");
-        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
-        else if (ask == undefined) throw new Error("Ask is incorrect, please ensure your paramaters are correctly formatted.");
+        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your parameters are correctly formatted.");
+        else if (ask == undefined) throw new Error("Ask is incorrect, please ensure your parameters are correctly formatted.");
 
         //Get size from previous ask size
         const size = ask.response.PortfolioItem.skuUuid;
@@ -207,6 +228,48 @@ module.exports = class stockx {
 
     /**
      * 
+     * @param {Object} ask - The previous ask object
+     * @param {number} ask.id - The id of the ask
+     */
+    async deleteAsk(ask){
+        //Verify fields passed in by user
+        if (!this.loggedIn) throw new Error("You must be logged in before deleting an ask!");
+        else if (ask == undefined) throw new Error("Ask is incorrect, please ensure your parameters are correctly formatted.");
+
+        //Delete ask
+        const response = await deleteAsk(this.token, {
+            askID: ask.id, 
+            cookieJar: this.cookieJar, 
+            proxy: this.proxy,
+            userAgent: this.userAgent
+        });
+
+        return response;
+    };
+
+    /**
+     * 
+     * @param {Object} bid - The previous ask object
+     * @param {number} bid.id - The id of the ask
+     */
+    async deleteBid(bid){
+        //Verify fields passed in by user
+        if (!this.loggedIn) throw new Error("You must be logged in before deleting a bid!");
+        else if (bid == undefined) throw new Error("Bid is incorrect, please ensure your parameters are correctly formatted.");
+
+        //Delete bid
+        const response = await deleteBid(this.token, {
+            bidID: bid.id, 
+            cookieJar: this.cookieJar, 
+            proxy: this.proxy,
+            userAgent: this.userAgent
+        });
+
+        return response;
+    };
+
+    /**
+     * 
      * @param {Object} bid - The previous bid object
      * @param {Object} options
      * @param {number} options.amount - The amount to update the bid to 
@@ -217,8 +280,8 @@ module.exports = class stockx {
 
         //Verify fields passed in by user
         if (!this.loggedIn) throw new Error("You must be logged in before placing a bid!");
-        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your paramaters are correctly formatted.");
-        else if (bid == undefined) throw new Error("Ask is incorrect, please ensure your paramaters are correctly formatted.");
+        else if (amount == NaN) throw new Error("Amount is incorrect, please ensure your parameters are correctly formatted.");
+        else if (bid == undefined) throw new Error("Ask is incorrect, please ensure your parameters are correctly formatted.");
 
         //Get size from previous ask size
         const size = bid.response.PortfolioItem.skuUuid;

@@ -1,4 +1,4 @@
-const deleteBid = require('./deleteBid');
+const deleteBid = require('./deletebid');
 
 module.exports = async (bearer, options) => {
     const bidResponse = await deleteBid(bearer, options);

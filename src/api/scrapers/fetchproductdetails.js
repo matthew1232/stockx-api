@@ -37,6 +37,7 @@ module.exports = async (product, options) => {
 
     return {
         name: body["Product"].title,
+        image: body["Product"].media.imageUrl,
         urlKey: body["Product"].urlKey,
         pid: body["Product"].styleId,
         uuid: body["Product"].uuid,

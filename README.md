@@ -26,8 +26,8 @@ yarn add stockx-api
 # How to use
 ## Basic use
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockxAPI();
 
 (async () => {
     try {
@@ -78,8 +78,8 @@ stockx-api accepts a few parameters in the class options
 
 For example:
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI({
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI({
     proxy: 'proxyhere',
     currency: 'USD',
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Mobile/15E148 Safari/604.1'
@@ -95,8 +95,8 @@ Keep in mind that if you have original code using old search method, you will ne
 
 For example:
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 stockX.newSearchProducts('yeezy', {
     limit: 5
@@ -112,8 +112,8 @@ There is also an optional `options` parameter, in which you can pass in:
 
 For example:
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 stockX.searchProducts('yeezy', {
     limit: 5
@@ -127,8 +127,8 @@ You can scrape the variants and basic product information using the `fetchProduc
 
 For example:
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 stockX.fetchProductDetails('https://stockx.com/adidas-yeezy-boost-700-magnet')
 .then(product => console.log(product))
@@ -142,8 +142,8 @@ You can login to stockX by using the `login` method. This takes in 2 parameters 
 
 For example:
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 console.log('Logging in...');
 
@@ -164,8 +164,8 @@ In the object:
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 (async () => {
     console.log('Logging in...');
@@ -203,8 +203,8 @@ In the object:
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 (async () => {
     console.log('Logging in...');
@@ -241,8 +241,8 @@ In the object:
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 (async () => {
     console.log('Logging in...');
@@ -286,8 +286,8 @@ In the object:
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 (async () => {
     console.log('Logging in...');
@@ -328,8 +328,8 @@ You can delete a previously placed ask by using the `deleteAsk` method. This tak
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 (async () => {
     console.log('Logging in...');
@@ -368,8 +368,8 @@ You can delete a previously placed bid by using the `deleteBid` method. This tak
 
 For example: 
 ```js
-const stockxAPI = require('stockx-api');
-const stockX = new stockxAPI();
+const StockXAPI = require('stockx-api');
+const stockX = new StockXAPI();
 
 (async () => {
     console.log('Logging in...');

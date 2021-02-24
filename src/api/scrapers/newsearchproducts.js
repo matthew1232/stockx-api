@@ -3,7 +3,8 @@ const got = require('got');
 module.exports = async (query, options = {}) => {
     const { limit, proxy, userAgent } = options;
 
-    const res = await got("https://xw7sbct9v6-1.algolianet.com/1/indexes/products/query?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.32.1&x-algolia-application-id=XW7SBCT9V6&x-algolia-api-key=6bfb5abee4dcd8cea8f0ca1ca085c2b3", {
+    const apiKey = '6b5e76b49705eb9f51a06d3c82f7acee';
+    const res = await got(`https://xw7sbct9v6-1.algolianet.com/1/indexes/products/query?x-algolia-agent=Algolia%20for%20vanilla%20JavaScript%203.32.1&x-algolia-application-id=XW7SBCT9V6&x-algolia-api-key=${apiKey}`, {
         headers: {
             "user-agent": userAgent,
             "accept": "application/json",

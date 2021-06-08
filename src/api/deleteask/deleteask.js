@@ -1,4 +1,5 @@
 const request = require('request-promise');
+const { checkRes } = require('../../utils');
 
 module.exports = async (bearer, options) => {
     const { askID, cookieJar, proxy, userAgent } = options;
@@ -30,13 +31,7 @@ module.exports = async (bearer, options) => {
         resolveWithFullResponse: true
     });
 
-    if (res.statusCode !== 200){
-        const e = new Error(`Status code error: ${res.statusCode}`);
-        e.statusCode = res.statusCode;
-        e.body = res.body;
-
-        throw e;
-    };
+    checkRes(res);
 
     return {
         id: res.body.PortfolioItem.chainId,

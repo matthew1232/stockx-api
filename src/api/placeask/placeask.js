@@ -1,5 +1,6 @@
 const request = require('request-promise');
 const moment = require('moment');
+const { checkRes } = require('../../utils');
 
 module.exports = async (bearer, options) => {
     const { amount, variantID, currency, cookieJar, proxy, userAgent } = options;
@@ -36,13 +37,7 @@ module.exports = async (bearer, options) => {
         proxy: proxy
     });
 
-    if (res.statusCode !== 200){
-        const e = new Error(`Status code error: ${res.statusCode}`);
-        e.statusCode = res.statusCode;
-        e.body = res.body;
-
-        throw e;
-    };
+    checkRes(res);
 
     return {
         id: res.body.PortfolioItem.chainId,

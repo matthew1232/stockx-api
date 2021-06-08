@@ -9,7 +9,7 @@ const updateAsk = require('../api/updateask/index');
 const deleteAsk = require('../api/deleteask/index');
 const updateBid = require('../api/updatebid/index');
 const deleteBid = require('../api/deletebid/index');
-const formatProxy = require('../utils/formatproxy');
+const { formatProxy } = require('../utils');
 
 module.exports = class StockX {
     /**
@@ -44,7 +44,8 @@ module.exports = class StockX {
         const products = await searchProducts(query, {
             limit, 
             proxy: this.proxy,
-            userAgent: this.userAgent
+            userAgent: this.userAgent,
+            cookieJar: this.cookieJar
         });
 
         return products;
@@ -63,7 +64,8 @@ module.exports = class StockX {
         const products = await newSearchProducts(query, {
             limit, 
             proxy: this.proxy,
-            userAgent: this.userAgent
+            userAgent: this.userAgent,
+            cookieJar: this.cookieJar
         });
 
         return products;
@@ -78,7 +80,8 @@ module.exports = class StockX {
         const products = await fetchProductDetails(product, {
             currency: this.currency, 
             proxy: this.proxy,
-            userAgent: this.userAgent
+            userAgent: this.userAgent,
+            cookieJar: this.cookieJar
         });
 
         return products;

@@ -4,7 +4,7 @@
 
 Easy access to StockX's unofficial API through object oriented promises. If you have any issues, you can contact me through discord at `matthew#5706`. Feel free to use this however you want, as it is under the MIT license. I would love to see what projects you guys can come up with using this. If you'd like to contribute to this library, fork the repo, make your changes, and submit a pull request.
 
-As of 1.0.7, I have changed the `searchProducts`, `newSearchProducts`, and `fetchProductDetails` methods to http2 using [got](https://github.com/sindresorhus/got) due to PerimeterX changes. Please report any issues you have have with PerimeterX (403 errors). Because of this, **proxy support is currently down for these three methods**, as the http2 proxying in [got](https://github.com/sindresorhus/got) [seems to be bugged](https://github.com/sindresorhus/got/issues/1356). If you need to use a proxy for these three methods, please use a previous version (1.0.6 and under).
+1.1.0 - Changed `fetchProductDetails`, `newSearchProducts`, and `searchProducts` to a new request module. All functions now support proxies. Please note that `searchProducts` is deprecated and non-functional at the moment.
 
 ## Installation 
 ```
@@ -115,7 +115,7 @@ For example:
 const StockXAPI = require('stockx-api');
 const stockX = new StockXAPI();
 
-stockX.searchProducts('yeezy', {
+stockX.newSearchProducts('yeezy', {
     limit: 5
 })
 .then(products => console.log(products))

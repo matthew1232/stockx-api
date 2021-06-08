@@ -3,7 +3,7 @@ const request = require('request-promise');
 module.exports = async (options) => {
     const { cookieJar, proxy, userAgent } = options;
     const reqOptions = {
-        uri: 'https://stockx.com/login',
+        uri: 'https://www.stockx.com/login',
         headers: {
             'Host': 'stockx.com',
             'upgrade-insecure-requests': '1',

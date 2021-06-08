@@ -1,6 +1,6 @@
 {
   "name": "stockx-api",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "communicate with the unofficial StockX API",
   "main": "index.js",
   "scripts": {
@@ -22,14 +22,17 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "got": "^11.5.0",
+    "hpagent": "^0.1.1",
     "http2-wrapper": "^1.0.0-beta.5.2",
     "moment": "^2.24.0",
+    "postman-request": "^2.88.1-postman.30",
     "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request-promise": "^4.2.4",
+    "tunnel": "0.0.6"
   },
   "devDependencies": {
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
-    "mocha": "^8.0.1"
+    "mocha": "^8.4.0"
   }
 }

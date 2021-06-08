@@ -4,7 +4,11 @@
 
 Easy access to StockX's unofficial API through object oriented promises. If you have any issues, you can contact me through discord at `matthew#5706`. Feel free to use this however you want, as it is under the MIT license. I would love to see what projects you guys can come up with using this. If you'd like to contribute to this library, fork the repo, make your changes, and submit a pull request.
 
-1.1.0 - Changed `fetchProductDetails`, `newSearchProducts`, and `searchProducts` to a new request module. All functions now support proxies. Please note that `searchProducts` is deprecated and non-functional at the moment.
+#### 1.1.0 
+- Changed `fetchProductDetails`, `newSearchProducts`, and `searchProducts` to a new request module. 
+- All functions now support proxies. 
+- `searchProducts` is deprecated and non-functional at the moment. 
+- Fixed the `newSearchProducts` function
 
 ## Installation 
 ```

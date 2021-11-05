@@ -36,6 +36,7 @@ module.exports = class StockX {
      * @param {string} query - The query string to search for 
      * @param {Object=} options
      * @param {Number=} options.limit - The limit on how many products to return at max 
+     * @deprecated Seems like the api blocks this endpoint now. Use newSearchProducts()
      */
     async searchProducts(query, options = {}){
         //Search products and return them

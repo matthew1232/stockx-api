@@ -27,15 +27,21 @@ module.exports = async (options = {}) => {
 
     checkRes(res);
 
-    let globalConstantString, constantsObject;
-    
+    const parseError = new Error("Failed to parse API key for search");
+    let searchOnlyApiKeyString;
     try {
-        globalConstantString = res.body.split('window.globalConstants = ')[1].split('</script>')[0].trim();
-        constantsObject = globalConstantString.endsWith(';') ? parseJSON(globalConstantString.slice(0, globalConstantString.length - 1)) : JSON.parse(globalConstantString);
-    }
-    catch(err){
-        throw new Error("Failed to parse API key for search");
-    };
+        let splittedBodyContent = res.body.split('window.searchOnlyApiKey = ');
 
-    return constantsObject.search.SEARCH_ONLY_API_KEY;
+        if (splittedBodyContent.length < 2) {
+            throw parseError
+        }
+
+        splittedBodyContent = splittedBodyContent[1].split("';")
+        searchOnlyApiKeyString = splittedBodyContent[0].replace("'", "").trim();
+    } catch (err) {
+        console.error(err)
+        throw parseError;
+    }
+
+    return searchOnlyApiKeyString;
 };

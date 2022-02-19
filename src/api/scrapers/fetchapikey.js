@@ -2,8 +2,6 @@ const util = require('util');
 const { checkRes, parseJSON } = require('../../utils');
 const request = util.promisify(require('postman-request'));
 
-const backupApiKey = '6bfb5abee4dcd8cea8f0ca1ca085c2b3'
-
 module.exports = async (options = {}) => {
     const { limit, proxy, userAgent, cookieJar } = options;
 
@@ -42,7 +40,7 @@ module.exports = async (options = {}) => {
         searchOnlyApiKeyString = splittedBodyContent[0].replace("'", "").trim();
     } catch (err) {
         console.error(err)
-        return backupApiKey;
+        throw parseError;
     }
 
     return searchOnlyApiKeyString;

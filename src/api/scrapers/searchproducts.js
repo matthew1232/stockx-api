@@ -6,15 +6,24 @@ module.exports = async (query, options = {}) => {
     const { limit, proxy, userAgent, cookieJar } = options;
 
     const res = await request({
-        url: `https://www.stockx.com/api/browse?_search=${query}`, 
+        url: `https://www.stockx.com/api/browse?_search=${query}`,
         headers: {
             'user-agent': userAgent,
-            'sec-fetch-dest': 'none',
-            'accept': '*/*',
-            'sec-fetch-site': 'cross-site',
+            'sec-fetch-dest': 'empty',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"',
+            'accept': 'application/json',
+            'sec-fetch-site': 'same-origin',
             'sec-fetch-mode': 'cors',
+            'accept-encoding': '*',
+            'authority': 'stockx.com',
+            'x-requested-with': 'XMLHttpRequest',
+            // 'referer': 'https://stockx.com/de-de/new-balance-test-run-30-salehe-bembury-finders-keepers',
+            'app-platform': 'Iron',
+            'sec-ch-ua-platform': '"macOS"',
+            'app-version': '2022.02.13.03',
             'accept-language': 'en-US'
-        }.
+        },
         proxy,
         //jar: cookieJar
     });

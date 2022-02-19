@@ -1,3 +1,3 @@
-const stockXAPI = require('./src/classes/Stockx');
+const stockXAPI = require('./src/classes/stockx');
 
 module.exports = stockXAPI;
